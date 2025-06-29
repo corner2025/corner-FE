@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Outlet, Route, Routes } from "react-router-dom";
+import LoginPage from "./pages/LoginPage";
+import Navbar from "./layout/Navbar";
+import Footer from "./layout/Footer";
+import MainPage from "./pages/MainPage";
+import DutyFreePage from "./pages/DutyFreePage";
+import TouristPage from "./pages/TouristPage";
+import FestivalPage from "./pages/FestivalPage";
+import CalenderPage from "./pages/CalenderPage";
+import MapPage from "./pages/MapPage";
+import ChartPage from "./pages/ChartPage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function Layout() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div
+      className="flex flex-col h-screen justify-between"
+      //   style={{ backgroundColor: "#EEF6FB" }}
+    >
+      <Navbar />
+      <main className="mt-24 mb-auto mx-auto w-10/12 max-w-4xl">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+function AdminLayout() {
+  return (
+    <div className="flex h-screen" style={{ backgroundColor: "#EEF6FB" }}>
+      <Outlet />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<MainPage />} />
+        <Route path="/dutyfree" element={<DutyFreePage />} />
+        <Route path="/tourist" element={<TouristPage />} />
+        <Route path="/festival" element={<FestivalPage />} />
+        <Route path="/calender" element={<CalenderPage />} />
+        <Route path="/map" element={<MapPage />} />
+        <Route path="/chart" element={<ChartPage />} />
+      </Route>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<LoginPage />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default App;
