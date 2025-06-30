@@ -69,7 +69,16 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-white transition-colors"
                 >
-                  축제/공연
+                  축제정보
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/perform"
+                  onClick={scrollToTop}
+                  className="hover:text-white transition-colors"
+                >
+                  공연정보
                 </Link>
               </li>
               <li>
@@ -88,15 +97,6 @@ const Footer = () => {
                   className="hover:text-white transition-colors"
                 >
                   여행지도
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/chart"
-                  onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
-                >
-                  면세통계
                 </Link>
               </li>
             </ul>

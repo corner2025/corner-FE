@@ -1,11 +1,11 @@
 import React from "react";
 
-const ChartPage = () => {
+const PerformPage = () => {
   return (
     <div className="flex flex-col items-center min-h-screen">
-      <div>chartPage</div>
+      <div>PerformPage</div>
     </div>
   );
 };
 
-export default ChartPage;
+export default PerformPage;

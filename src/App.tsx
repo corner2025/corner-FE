@@ -8,7 +8,7 @@ import TouristPage from "./pages/TouristPage";
 import FestivalPage from "./pages/FestivalPage";
 import CalenderPage from "./pages/CalenderPage";
 import MapPage from "./pages/MapPage";
-import ChartPage from "./pages/ChartPage";
+import PerformPage from "./pages/PerformPage";
 
 function Layout() {
   return (
@@ -43,7 +43,7 @@ function App() {
         <Route path="/festival" element={<FestivalPage />} />
         <Route path="/calender" element={<CalenderPage />} />
         <Route path="/map" element={<MapPage />} />
-        <Route path="/chart" element={<ChartPage />} />
+        <Route path="/perform" element={<PerformPage />} />
       </Route>
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<LoginPage />} />
