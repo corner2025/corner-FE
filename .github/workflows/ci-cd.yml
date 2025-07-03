@@ -1,0 +1,61 @@
+name: ci/cd corner2025-fe
+
+on:
+  push:
+    branches:
+      - "main"
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v5
+
+      - name: Build Docker image
+        run: |
+          docker build -t corner-fe .
+
+      - name: Save Docker image as tar
+        run: |
+          docker save corner-fe > corner-fe.tar
+
+      - name: Upload image to server via SCP
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "corner-fe.tar"
+          target: "/corner-fe"
+
+      - name: Run remote deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -ex
+
+            cd /corner-fe
+
+            # env만들기
+            touch .env
+            echo "REACT_APP_API_URL=${{ secrets.VITE_SERVER_URL }}" > .env
+            echo "OTHER_ENV_VAR=${{ secrets.VITE_KAKAO_MAP_API_KEY }}" >> .env
+
+            chmod 600 .env
+
+            docker load < corner-fe.tar
+
+            docker compose down || true
+            docker compose up -d --force-recreate
