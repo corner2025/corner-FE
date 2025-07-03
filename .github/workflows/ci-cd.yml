@@ -34,7 +34,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: "corner-fe.tar"
-          target: "/corner-FE"
+          target: "/corner-FE/"
 
       - name: Run remote deploy
         uses: appleboy/ssh-action@v1.0.0
