@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { touristSpots } from "../data/tourist";
 import { areaCodes } from "../types/tourist";
+import KakaoMapView from "../components/KakaoMapView";
 
 const TouristDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,7 +41,7 @@ const TouristDetailPage: React.FC = () => {
   const fees = extractInfo(spot.description, "요금");
   const nearbyRestaurants = extractFacilities(spot.description, "주변 식당");
   const nearbyAccommodations = extractFacilities(spot.description, "주변 숙박");
-  const howToGetThere = extractInfo(spot.description, "가는 방법"); // 가는 방법 추가 파싱
+  const howToGetThere = extractInfo(spot.description, "가는 방법");
 
   // 실제 소개 글만 추출 (첫 줄부터 '운영 시간:' 전까지)
   const mainDescriptionLines = spot.description.split("\n");
@@ -55,13 +56,12 @@ const TouristDetailPage: React.FC = () => {
     .join("\n")
     .trim();
 
-  // 지도 링크 생성 (카카오맵 기준)
   const kakaoMapLink = `https://map.kakao.com/link/map/${spot.name},${spot.latitude},${spot.longitude}`;
 
   return (
     <div className="container mx-auto p-4 md:p-8 bg-white shadow-lg rounded-xl my-8 animate-fade-in mb-15">
       <button
-        onClick={() => navigate(-1)} // 이전 페이지로 이동
+        onClick={() => navigate(-1)}
         className="mb-6 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out flex items-center"
       >
         <svg
@@ -69,7 +69,6 @@ const TouristDetailPage: React.FC = () => {
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             strokeLinecap="round"
@@ -109,7 +108,7 @@ const TouristDetailPage: React.FC = () => {
               rel="noopener noreferrer"
               className="ml-2 text-blue-500 hover:underline text-sm"
             >
-              [지도 보기]
+              [길찾기]
             </a>
           </p>
           <p className="text-lg text-gray-700 mb-2">
@@ -149,7 +148,7 @@ const TouristDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 주변 식당/숙박 (description 필드에서 파싱) */}
+      {/* 주변 식당/숙박 */}
       {nearbyRestaurants.length > 0 || nearbyAccommodations.length > 0 ? (
         <div className="mt-12 pt-8 border-t-2 border-gray-200">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">주변 시설</h2>
@@ -183,17 +182,43 @@ const TouristDetailPage: React.FC = () => {
               </div>
             )}
           </div>
-          <p className="text-sm text-gray-500 mt-4">
-            * 주변 식당/숙박 정보는 소개글에서 파싱된 내용입니다. 실제
-            서비스에서는 지도 API(예: 카카오맵, 네이버 지도) 연동을 통해 더
-            정확한 위치 정보를 제공할 수 있습니다.
-          </p>
         </div>
       ) : (
         <p className="text-center text-gray-500 mt-12 pt-8 border-t-2 border-gray-200">
           주변 시설 정보가 없습니다.
         </p>
       )}
+
+      {/* 관광지 위치 지도 */}
+      <div className="mt-14">
+        <h2 className="text-2xl font-bold text-gray-800 mb-5 flex items-center gap-2">
+          위치 정보
+        </h2>
+        <div className="w-full max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-lg border border-gray-100 bg-blue-50">
+          <KakaoMapView
+            myLocation={{ lat: 1, lng: 1 }}
+            center={{ lat: spot.latitude, lng: spot.longitude }}
+            level={4}
+            shops={[
+              {
+                lat: spot.latitude,
+                lng: spot.longitude,
+                name: spot.name,
+              },
+            ]}
+          />
+        </div>
+        <div className="text-right mt-2">
+          <a
+            href={kakaoMapLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-blue-500 hover:underline text-sm"
+          >
+            카카오맵에서 크게 보기 →
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
