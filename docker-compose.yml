@@ -10,7 +10,7 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true # hot reload용 설정
-    command: npm run dev -- --host
+    command: npm run dev -- --host 0.0.0.0
     networks:
       - corner-net
 
