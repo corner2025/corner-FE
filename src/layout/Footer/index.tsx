@@ -1,13 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
-// import FooterLocale from "../../Locale/Footer.json";
 
 const Footer = () => {
-  //   const t = (key) => {
-  //     const keys = key.split(".");
-  //     return keys.reduce((obj, k) => obj[k], FooterLocale[language]);
-  //   };
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -16,31 +10,42 @@ const Footer = () => {
   };
 
   return (
-    <footer
-      className=" text-gray-300 bg-gray-800"
-      style={{ backgroundColor: "#EEF6FB" }}
-    >
-      <div
-        className="container mx-auto px-4 py-12"
-        style={{ color: "#36454F" }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h2 className="text-lg font-bold mb-4">방구석</h2>
-            <p className="text-gray-400">
-              쇼핑과 관광을 결합한 일정 추천, 이벤트 캘린더로 여행과 쇼핑 경험을
-              한곳에서 강화하는 여행 서비스 플랫폼입니다.
+    <footer className="text-gray-800" style={{ backgroundColor: "#EEF6FB" }}>
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* 브랜드/설명 */}
+          <div className="flex flex-col items-start">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-700 via-blue-500 to-yellow-400 bg-clip-text text-transparent select-none">
+                Korea Travel Hub
+              </span>
+            </div>
+            <p className="text-base text-gray-500 font-medium leading-relaxed mt-2">
+              여행, 쇼핑, 문화, 축제, 공연까지
+              <br />
+              <span className="text-blue-500 font-semibold">
+                한 곳에서 만나는 대한민국 여행의 모든 것!
+              </span>
+              <br />
+              Korea Travel Hub와 함께라면,
+              <br />
+              여행 준비부터 즐기는 순간까지
+              <br />
+              스마트하고 즐거운 경험을 약속드립니다.
             </p>
           </div>
 
+          {/* 빠른 링크 */}
           <div>
-            <h3 className="text-xl font-bold mb-4">빠른 링크</h3>
-            <ul className="space-y-2">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              빠른 링크
+            </h3>
+            <ul className="space-y-2 font-medium">
               <li>
                 <Link
                   to="/"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
                   홈
                 </Link>
@@ -49,7 +54,7 @@ const Footer = () => {
                 <Link
                   to="/dutyfree"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   면세점
                 </Link>
@@ -58,7 +63,7 @@ const Footer = () => {
                 <Link
                   to="/tourist"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   관광지
                 </Link>
@@ -67,16 +72,16 @@ const Footer = () => {
                 <Link
                   to="/festival"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   축제정보
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/perform"
+                  to="/performance"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   공연정보
                 </Link>
@@ -85,7 +90,7 @@ const Footer = () => {
                 <Link
                   to="/calender"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   일정/캘린더
                 </Link>
@@ -94,7 +99,7 @@ const Footer = () => {
                 <Link
                   to="/map"
                   onClick={scrollToTop}
-                  className="hover:text-white transition-colors"
+                  className="hover:text-blue-600 transition-colors"
                 >
                   여행지도
                 </Link>
@@ -102,54 +107,69 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* 연락처 */}
           <div>
-            <h3 className="text-xl font-bold mb-4">연락처</h3>
-            <ul className="space-y-2 text-gray-400">
-              <li>경상남도 진주시</li>
-              <li>진주대로 501</li>
-              <li>010-0000-0000</li>
-              <li>abc@gmail.com</li>
+            <h3 className="text-xl font-bold mb-4">고객센터</h3>
+            <ul className="space-y-2 text-gray-500 text-base">
+              <li>경상남도 진주시 진주대로 501</li>
+              <li>
+                이메일: <span className="text-blue-500">abc@gmail.com</span>
+              </li>
+              <li>
+                문의전화: <span className="text-blue-500">010-0000-0000</span>
+              </li>
+              <li className="text-xs text-gray-400">
+                평일 09:00 ~ 18:00 (주말/공휴일 휴무)
+              </li>
             </ul>
           </div>
 
+          {/* 소셜 미디어 */}
           <div>
             <h3 className="text-xl font-bold mb-4">소셜 미디어</h3>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mt-2">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-blue-500 transition-colors text-2xl"
+                aria-label="페이스북"
               >
                 <FaFacebook />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-blue-500 transition-colors text-2xl"
+                aria-label="트위터"
               >
                 <FaTwitter />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-pink-500 transition-colors text-2xl"
+                aria-label="인스타그램"
               >
                 <FaInstagram />
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-blue-700 transition-colors text-2xl"
+                aria-label="링크드인"
               >
                 <FaLinkedin />
               </a>
             </div>
+            <div className="mt-6 text-xs text-gray-400">
+              SNS에서{" "}
+              <span className="font-semibold text-blue-500">
+                #KoreaTravelHub
+              </span>
+              를 검색해보세요!
+            </div>
           </div>
         </div>
 
-        <div
-          className="border-t border-gray-800 mt-8 pt-8 text-center"
-          style={{ color: "#36454F" }}
-        >
-          <p className="text-sm">
-            ⓒ 2025 Corner Of The Room. All rights reserved.
-            {/* <AiOutlineSmile /> */}
+        <div className="border-t border-blue-100 mt-10 pt-8 text-center">
+          <p className="text-sm text-gray-500">
+            ⓒ 2025 Korea Travel Hub. All rights reserved.
           </p>
         </div>
       </div>
