@@ -11,3 +11,9 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true # hot reload용 설정
     command: npm run dev -- --host
+    networks:
+      - corner-net
+
+networks:
+  corner-net:
+    external: true
