@@ -46,9 +46,7 @@ jobs:
             echo "OTHER_ENV_VAR=${{ secrets.VITE_KAKAO_MAP_API_KEY }}" >> .env
 
             chmod 600 .env
-
-            docker load < corner-fe.tar
-
+            
             docker compose down || true
             docker compose build --no-cache
             docker compose up -d --force-recreate
