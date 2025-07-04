@@ -42,8 +42,8 @@ jobs:
 
             # env만들기
             touch .env
-            echo "REACT_APP_API_URL=${{ secrets.VITE_SERVER_URL }}" > .env
-            echo "OTHER_ENV_VAR=${{ secrets.VITE_KAKAO_MAP_API_KEY }}" >> .env
+            echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" > .env
+            echo "VITE_KAKAO_MAP_API_KEY=${{ secrets.VITE_KAKAO_MAP_API_KEY }}" >> .env
 
             chmod 600 .env
             
