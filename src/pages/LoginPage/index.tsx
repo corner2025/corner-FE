@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import axiosInstance from "../../utils/axios";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FiUser, FiLock } from "react-icons/fi";
+import { HiOutlineShieldCheck } from "react-icons/hi2";
 
 type FormData = {
   id: string;
@@ -18,15 +20,10 @@ const LoginPage = () => {
   } = useForm<FormData>({ mode: "onChange" });
 
   const onSubmit = async ({ id, password }: FormData) => {
-    const body = {
-      id,
-      password,
-    };
+    const body = { id, password };
     try {
       const response = await axiosInstance.post("/admin/login", body);
-      console.log(response.data);
       localStorage.setItem("accessToken", response.data.accessToken);
-      console.log("Login successful");
       reset();
       navigate("/");
     } catch (error) {
@@ -38,10 +35,7 @@ const LoginPage = () => {
     }
   };
 
-  const userId = {
-    required: "ID is required",
-  };
-
+  const userId = { required: "ID is required" };
   const userPassword = {
     required: "Password is required",
     minLength: {
@@ -51,67 +45,115 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="flex flex-col justify-center mt-20 max-w-[400px] m-auto">
-      <div className="p-10 bg-white rounded-3xl shadow-lg">
-        <h1 className="text-3xl font-semibold text-center text-gray-900">
-          Admin
+    <section className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 overflow-hidden px-2 sm:px-4">
+      {/* 배경 원형 패턴 */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] bg-blue-100/60 rounded-full blur-3xl"></div>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] sm:w-[320px] sm:h-[320px] bg-purple-100/40 rounded-full blur-2xl"></div>
+      </div>
+
+      {/* 로그인 카드 */}
+      <div className="relative z-10 w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/90 rounded-2xl shadow-2xl border border-blue-100 p-5 sm:p-8 md:p-10 animate-fadein drop-shadow-xl">
+        <div className="flex justify-center mb-6">
+          <span className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow bg-gradient-to-tr from-blue-400 via-purple-300 to-blue-200">
+            <HiOutlineShieldCheck className="text-white text-3xl sm:text-4xl" />
+          </span>
+        </div>
+        <h1 className="text-xl sm:text-2xl font-extrabold text-center text-blue-700 mb-8 tracking-wide select-none">
+          Admin Login
         </h1>
-        <form className="mt-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-5 sm:space-y-6"
+        >
+          <div>
             <label
               htmlFor="id"
-              className="text-sm font-semibold"
-              style={{ color: "#36454F" }}
+              className="block text-sm font-semibold text-blue-700 mb-2"
             >
               ID
             </label>
-            <input
-              id="id"
-              type="text"
-              className="w-full px-4 py-2 mt-2 bg-white border rounded-md"
-              {...register("id", userId)}
-            />
-            {errors?.id && (
-              <div>
-                <span className="text-red-500">
-                  {errors.id.message as string}
-                </span>
-              </div>
+            <div className="relative">
+              <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base sm:text-lg" />
+              <input
+                id="id"
+                type="text"
+                className={`w-full pl-9 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition placeholder-gray-400 bg-blue-50/70 text-gray-700 text-sm sm:text-base
+                  ${
+                    errors.id
+                      ? "border-red-400 ring-red-200"
+                      : "border-blue-100"
+                  }`}
+                {...register("id", userId)}
+                autoComplete="username"
+                placeholder="Enter Admin ID"
+              />
+            </div>
+            {errors.id && (
+              <p className="text-xs text-red-500 mt-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {errors.id.message}
+              </p>
             )}
           </div>
-
-          <div className="mb-2">
+          <div>
             <label
               htmlFor="password"
-              className="text-sm font-semibold"
-              style={{ color: "#36454F" }}
+              className="block text-sm font-semibold text-blue-700 mb-2"
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              className="w-full px-4 py-2 mt-2 bg-white border rounded-md"
-              {...register("password", userPassword)}
-            />
-            {errors?.password && (
-              <div>
-                <span className="text-red-500">
-                  {errors.password.message as string}
-                </span>
-              </div>
+            <div className="relative">
+              <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base sm:text-lg" />
+              <input
+                id="password"
+                type="password"
+                className={`w-full pl-9 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 transition placeholder-gray-400 bg-blue-50/70 text-gray-700 text-sm sm:text-base
+                  ${
+                    errors.password
+                      ? "border-red-400 ring-red-200"
+                      : "border-blue-100"
+                  }`}
+                {...register("password", userPassword)}
+                autoComplete="current-password"
+                placeholder="Enter your password"
+              />
+            </div>
+            {errors.password && (
+              <p className="text-xs text-red-500 mt-2 flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {errors.password.message}
+              </p>
             )}
           </div>
-
-          <div className="mt-6 mb-2">
-            <button
-              className="w-full text-white px-4 py-2 rounded-md hover:bg-gray-700 duration-200"
-              style={{ backgroundColor: "#36454F" }}
-              type="submit"
-            >
-              LOGIN
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-blue-500 via-purple-400 to-blue-400 text-white rounded-lg font-bold hover:from-blue-600 hover:to-purple-500 transition duration-300 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-60 text-base sm:text-lg tracking-wide"
+          >
+            Continue
+          </button>
         </form>
       </div>
     </section>
