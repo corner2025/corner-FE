@@ -161,7 +161,7 @@ const DutyFreePage: React.FC = () => {
     <div className="min-h-screen bg-gray-50 pb-5 mb-10 rounded-3xl">
       {/* 헤더 */}
       <header className="w-full bg-white border-b border-gray-200">
-        <div className="max-w-3xl mx-auto px-4 py-10 flex flex-col items-center">
+        <div className="max-w-3xl mx-auto pt-7 pb-11 flex flex-col items-center">
           <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight animate-fade-in-down">
             면세점 품목 랭킹 & 내 주변 정보
           </h1>

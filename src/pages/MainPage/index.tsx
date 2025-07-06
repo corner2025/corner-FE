@@ -133,7 +133,7 @@ const MainPage: React.FC = () => {
           <div className="text-xs text-gray-400 mt-2">
             더 많은 정보는{" "}
             <Link
-              to="/calender"
+              to="/calendar"
               onClick={scrollToTop}
               className="underline text-pink-500"
             >
@@ -271,7 +271,7 @@ const MainPage: React.FC = () => {
       {/* 캘린더/지도 바로가기 - 컬러풀 버튼 */}
       <section className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row gap-6 mb-10">
         <Link
-          to="/calender"
+          to="/calendar"
           onClick={scrollToTop}
           className="flex-1 rounded-2xl bg-gradient-to-r from-orange-100 to-yellow-200 p-7 flex items-center gap-4 hover:shadow-lg transition group"
         >

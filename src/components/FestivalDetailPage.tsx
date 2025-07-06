@@ -1,12 +1,13 @@
 // src/pages/FestivalDetailPage.tsx
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Festival } from "../types/festival";
 import { festivals } from "../data/festival";
 
 const FestivalDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [festival, setFestival] = useState<Festival | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const festivalId = parseInt(id || "", 10);
@@ -109,8 +110,8 @@ const FestivalDetailPage: React.FC = () => {
 
           {/* 돌아가기 버튼 */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <Link
-              to="/festival"
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex items-center px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
             >
               <svg
@@ -127,8 +128,8 @@ const FestivalDetailPage: React.FC = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 ></path>
               </svg>
-              축제 목록으로 돌아가기
-            </Link>
+              목록으로 돌아가기
+            </button>
           </div>
         </div>
       </div>

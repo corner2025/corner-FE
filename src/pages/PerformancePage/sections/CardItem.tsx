@@ -18,9 +18,6 @@ interface CardItemProps {
 }
 
 const CardItem: React.FC<CardItemProps> = ({ performance }) => {
-  //    const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
-  //     const itemsPerPage = 10;
-
   return (
     <div
       className="

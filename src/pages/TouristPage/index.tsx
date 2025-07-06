@@ -26,7 +26,7 @@ const TouristPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-8 animate-fade-in-down">
+      <h1 className=" text-3xl sm:text-4xl font-extrabold text-center  text-gray-800 mb-10 tracking-tight animate-fade-in-down bg-clip-text drop-shadow">
         여기가 바로 인생샷 명소!
       </h1>
 

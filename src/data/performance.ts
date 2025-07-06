@@ -142,7 +142,7 @@ export const performances: Performance[] = [
     genre: "연극",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24002672_s.gif",
+    imgUrl: "https://ticketimage.interpark.com/Play/image/large/19/19018229_p.gif",
     description: "관객이 직접 범인을 추리하는 참여형 코미디 연극",
   },
   {
@@ -175,7 +175,7 @@ export const performances: Performance[] = [
     genre: "연극",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24003058_s.gif",
+    imgUrl: "https://ticketimage.interpark.com/playdb/goods/image/etc/newstage_181015_04.jpg",
     description: "웃음 폭탄 코미디 연극의 대명사",
   },
   {
@@ -252,7 +252,7 @@ export const performances: Performance[] = [
     genre: "연극",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24003058_s.gif",
+    imgUrl: "https://smartixcamping.cafe24.com/upload/mticket/upload/2022/05/16/202204151812391_tmp8129646538163146912.jpg",
     description: "풍자와 해학이 넘치는 코미디 연극",
   },
   {
@@ -362,7 +362,7 @@ export const performances: Performance[] = [
     genre: "연극",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24003058_s.gif",
+    imgUrl: "https://marketplace.canva.com/EAF_4QFDSOo/1/0/1131w/canva-%EB%B3%B4%EB%9D%BC-%ED%95%98%ED%8A%B8%EC%9D%BC%EB%9F%AC%EC%8A%A4%ED%8A%B8-%EC%B9%B4%ED%88%B0-%EC%9D%8C%EC%95%85%EC%BD%98%EC%84%9C%ED%8A%B8-%ED%8F%AC%EC%8A%A4%ED%84%B0-8sYMo2WO3-c.jpg",
     description: "티격태격 로맨틱 코미디",
   },
   {
@@ -669,7 +669,7 @@ export const performances: Performance[] = [
     area: "서울",
     genre: "뮤지컬",
     startDate: new Date("2025-07-20"),
-    endDate: new Date("2525-09-30"),
+    endDate: new Date("2025-09-30"),
     imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24006277_s.gif",
     description: "매혹적인 뱀파이어 이야기",
   },
@@ -780,7 +780,7 @@ export const performances: Performance[] = [
     genre: "연극",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24003058_s.gif",
+    imgUrl: "https://tkfile.yes24.com/upload2/PerfBlog/202010/20201030/20201030-37842.jpg",
     description: "썸과 연애 사이의 아슬아슬한 로맨스",
   },
   {
@@ -1077,7 +1077,7 @@ export const performances: Performance[] = [
     genre: "뮤지컬",
     startDate: new Date("2024-01-01"), // 과거
     endDate: new Date("2025-12-31"),
-    imgUrl: "https://ticketimage.interpark.com/Play/image/large/24/24006277_s.gif",
+    imgUrl: "https://ticketimage.interpark.com/Play/image/large/25/25005692_p.gif",
     description: "소시민들의 삶을 위로하는 따뜻한 창작 뮤지컬",
   },
   {

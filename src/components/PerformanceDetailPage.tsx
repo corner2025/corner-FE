@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Performance } from "../types/performance";
 import { performances } from "../data/performance";
 
 const PerformanceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [performance, setPerformance] = useState<Performance | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const performanceId = parseInt(id || "", 10);
@@ -109,8 +110,8 @@ const PerformanceDetailPage: React.FC = () => {
 
           {/* 돌아가기 버튼 */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <Link
-              to="/performance"
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex items-center px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-300 ease-in-out"
             >
               <svg
@@ -127,8 +128,8 @@ const PerformanceDetailPage: React.FC = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 ></path>
               </svg>
-              공연 목록으로 돌아가기
-            </Link>
+              목록으로 돌아가기
+            </button>
           </div>
         </div>
       </div>

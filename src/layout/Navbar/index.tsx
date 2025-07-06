@@ -3,31 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { PiAirplaneTakeoffBold } from "react-icons/pi";
+import { SUGGESTIONS } from "../../data/suggestion";
 
 // 예시 연관 검색어 데이터 (실제 서비스에서는 서버/DB에서 받아올 수 있음)
-const SUGGESTIONS = [
-  "면세점",
-  "관광지",
-  "축제",
-  "공연",
-  "일정",
-  "여행지도",
-  "쇼핑",
-  "서울 관광지",
-  "부산 축제",
-  "인기 공연",
-  "여행 준비물",
-  "여행 코스 추천",
-  "면세점 할인",
-  "여행 일정표",
-  "여행지 추천",
-  "서울 맛집",
-  "서울 면세점",
-  "서울 추천",
-  "서울 숙소",
-  "서울 지하철",
-  "서울 아파트",
-];
 
 type MenuItemProps = {
   path: string;
@@ -41,7 +19,7 @@ const menuItems = [
   { path: "/tourist", key: "관광지" },
   { path: "/festival", key: "축제정보" },
   { path: "/performance", key: "공연정보" },
-  { path: "/calender", key: "일정캘린더" },
+  { path: "/calendar", key: "일정캘린더" },
   { path: "/map", key: "여행지도" },
 ];
 
@@ -165,7 +143,7 @@ const NavBar = () => {
             isSearchOpen ? "translate-y-0" : "-translate-y-full"
           }`}
           style={{
-            minHeight: filteredSuggestions.length > 0 ? 700 : 125,
+            minHeight: filteredSuggestions.length > 0 ? 700 : 125, // 검색창 높이 조정
           }}
         >
           <div className="flex flex-col items-center max-w-md mx-auto w-full pt-8">

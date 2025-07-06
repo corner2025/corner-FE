@@ -27,7 +27,6 @@ body {
   font-family: Pretendard, sans-serif;
 }
 
-/* Custom Animations (optional) */
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -80,4 +79,96 @@ body {
 }
 .animate-fade-in {
   animation: fadeIn 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* Calendar */
+
+/* 날짜 셀 정사각형, 선택/오늘 강조, today 라벨 CSS 적용 */
+.fc-daygrid-day-frame {
+  aspect-ratio: 1/1;
+  min-height: 60px;
+  max-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding: 6px 8px 0 0;
+  background: #f8fafc;
+  border-radius: 10px;
+  transition: background 0.2s, border 0.2s;
+  position: relative;
+}
+.fc-daygrid-day:hover .fc-daygrid-day-frame {
+  background: #e0e7ef;
+}
+.fc-day-today .fc-daygrid-day-frame {
+  background: linear-gradient(135deg, #dbeafe 60%, #fce7f3 100%);
+  border: 2px solid #6366f1;
+}
+.fc .fc-scrollgrid {
+  border-radius: 16px;
+  overflow: hidden;
+  border: none;
+  box-shadow: 0 2px 8px 0 #e0e7ef;
+}
+.fc .fc-col-header-cell-cushion {
+  font-weight: 700;
+  color: #6366f1;
+  font-size: 1rem;
+  padding: 8px 0;
+}
+.fc .fc-toolbar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #334155;
+}
+.fc .fc-daygrid-day-number {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  background: transparent;
+  border-radius: 6px;
+  padding: 2px 6px;
+  transition: background 0.2s;
+  position: relative;
+  z-index: 1;
+}
+/* 선택된 날짜 테두리 강조 */
+.fc-daygrid-day.selected-date .fc-daygrid-day-frame {
+  border: 2.5px solid #f472b6 !important;
+  box-shadow: 0 0 0 2px #fbcfe8;
+  background: #fff0f6;
+}
+/* 오늘이면서 선택된 날짜는 두 테두리 모두 표시 */
+.fc-day-today.selected-date .fc-daygrid-day-frame {
+  border: 2.5px solid #f472b6 !important;
+  box-shadow: 0 0 0 2px #fbcfe8;
+  background: linear-gradient(135deg, #fce7f3 60%, #dbeafe 100%);
+}
+@media (max-width: 640px) {
+  .fc-daygrid-day-frame {
+    min-height: 36px;
+    max-height: 48px;
+    padding: 2px 4px 0 0;
+  }
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.9rem;
+  }
+  .fc .fc-daygrid-day-number {
+    font-size: 0.9rem;
+  }
+}
+
+.animate-fadein {
+  animation: fadeinUp 0.7s cubic-bezier(0.23, 1.24, 0.57, 1) both;
+}
+@keyframes fadeinUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

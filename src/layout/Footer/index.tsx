@@ -12,7 +12,7 @@ const Footer = () => {
   return (
     <footer className="text-gray-800" style={{ backgroundColor: "#EEF6FB" }}>
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 ">
           {/* 브랜드/설명 */}
           <div className="flex flex-col items-start">
             <div className="flex items-center gap-2 mb-3">
@@ -88,7 +88,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/calender"
+                  to="/calendar"
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >

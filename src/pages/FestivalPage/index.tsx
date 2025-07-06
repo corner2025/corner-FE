@@ -43,8 +43,8 @@ const FestivalPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4">
-      <h1 className="text-2xl sm:text-3xl font-extrabold text-center text-gray-800 mb-8 animate-fade-in-down">
-        🔥 지금 가장 핫한 축제는?
+      <h1 className="relative z-10 text-3xl sm:text-4xl font-extrabold text-center mb-10 tracking-tight animate-fade-in-down bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-blue-500 to-yellow-500 drop-shadow">
+        지금 가장 핫한 축제는?
       </h1>
 
       {/* 필터링 */}
@@ -62,7 +62,7 @@ const FestivalPage: React.FC = () => {
       </div>
 
       {/* 축제 리스트 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
         {paginatedItems.length === 0 ? (
           <p className="col-span-full text-center text-xl text-gray-500 mt-10">
             선택하신 조건에 해당하는 축제가 없습니다.
