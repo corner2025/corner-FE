@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axiosInstance from "../../utils/axios";
 import { useNavigate } from "react-router-dom";
 import _ from "lodash";
@@ -14,7 +14,6 @@ const kakaoApiKey = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const MapPage = () => {
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
-  const markerRef = useRef<any>(null);
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const navigate = useNavigate();
 
