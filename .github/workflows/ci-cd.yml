@@ -26,7 +26,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: .
-          target: "/home/ec2-user/corner-FE/"
+          target: "/corner2025/cornerFE/"
 
       - name: Run remote deploy
         uses: appleboy/ssh-action@v1.0.0
@@ -38,7 +38,7 @@ jobs:
           script: |
             set -ex
 
-            cd /home/ec2-user/corner-FE
+            cd /corner2025/cornerFE
 
             # env만들기
             touch .env
