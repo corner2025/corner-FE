@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  console.log('Loaded env:', env)
 
   return defineConfig({
     plugins: [react(), tailwindcss()],
