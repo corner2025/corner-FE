@@ -1,26 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Performance } from "../types/performance";
-import { performances } from "../data/performance";
+import { useTranslation } from "react-i18next";
 
 const PerformanceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [performance, setPerformance] = useState<Performance | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const performanceId = parseInt(id || "", 10);
-    const foundPerformance = performances.find((p) => p.id === performanceId);
+  const [performances, setperformances] = useState<Performance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    if (foundPerformance) {
-      setPerformance(foundPerformance);
-    } else {
-      setPerformance(null);
-    }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_SERVER_URL}performances/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("data:", data);
+        setperformances([data]);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("데이터를 불러오지 못했습니다.");
+        setLoading(false);
+      });
   }, [id]);
 
-  if (!performance) {
+  const performance = performances[0];
+
+  const { t } = useTranslation();
+
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-blue-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-400 border-b-4 mb-6"></div>
+        <div className="text-2xl text-blue-600 font-semibold tracking-wide">
+          {t("loadingPage")}
+        </div>
+        <div className="text-sm text-gray-400 mt-2">{t("wait")}</div>
+      </div>
+    );
+
+  if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100 text-gray-700">
         <h2 className="text-3xl font-bold mb-4">축제를 찾을 수 없습니다 😢</h2>
@@ -35,13 +55,6 @@ const PerformanceDetailPage: React.FC = () => {
     );
   }
 
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}년 ${month}월 ${day}일`;
-  };
-
   return (
     <div className="py-10 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-md overflow-hidden md:flex animate-fade-in">
@@ -53,11 +66,8 @@ const PerformanceDetailPage: React.FC = () => {
             {" "}
             {/* max-w-xs로 너비 제한, 그림자 유지 */}
             <img
-              src={
-                performance.imgUrl ||
-                "https://via.placeholder.com/400x600?text=Festival+Image"
-              } // 세로 긴 플레이스홀더 (예시)
-              alt={performance.title}
+              src={performance.posterUrl}
+              alt="Not Found"
               className="w-full h-auto object-contain rounded-lg" // 원본 비율 유지, 배경색 제거
               onError={(e) => {
                 e.currentTarget.src =
@@ -73,21 +83,24 @@ const PerformanceDetailPage: React.FC = () => {
           <div>
             {/* 타이틀 및 기간 */}
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
-              {performance.title}
+              {performance.name}
             </h1>
             <p className="text-lg text-gray-700 mb-6 border-b pb-4">
-              <span className="font-semibold text-red-600">기간 :</span>{" "}
-              {formatDate(performance.startDate)} ~{" "}
-              {formatDate(performance.endDate)}
+              <span className="font-semibold text-red-600">
+                {t("performance.detailPage.period")}
+              </span>{" "}
+              {performance.startDate} ~ {performance.endDate}
             </p>
 
             {/* 개요/설명 */}
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">
-                축제 소개
+                {t("performance.detailPage.description")}
               </h2>
               <p className="text-gray-700 leading-relaxed text-base">
-                {performance.description}
+                {performance.state === "공연중"
+                  ? t("performance.detailPage.ing")
+                  : t("performance.detailPage.stop")}
               </p>
             </div>
 
@@ -102,8 +115,10 @@ const PerformanceDetailPage: React.FC = () => {
                 >
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"></path>
                 </svg>
-                <span className="font-semibold -ml-2">장소 : &nbsp;</span>{" "}
-                {performance.place}, {performance.area}
+                <span className="font-semibold -ml-2">
+                  {t("performance.detailPage.location")} &nbsp;
+                </span>{" "}
+                {performance.area}
               </div>
             </div>
           </div>
@@ -128,7 +143,7 @@ const PerformanceDetailPage: React.FC = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 ></path>
               </svg>
-              목록으로 돌아가기
+              {t("performance.detailPage.button")}
             </button>
           </div>
         </div>

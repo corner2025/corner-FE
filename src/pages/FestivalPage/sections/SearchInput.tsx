@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface SearchInputProps {
   keyword: string; // 검색 키워드
@@ -6,11 +7,13 @@ interface SearchInputProps {
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ keyword, setKeyword }) => {
+  const { t } = useTranslation();
+
   return (
     <input
       type="text"
       className="p-2 rounded-lg shadow-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="키워드 검색"
+      placeholder={t("searchInput.placeholder")}
       value={keyword}
       onChange={(e) => setKeyword(e.target.value)}
     />

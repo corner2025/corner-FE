@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Festival } from "../types/festival";
 import { festivals } from "../data/festival";
+import { useTranslation } from "react-i18next";
 
 const FestivalDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,16 +22,22 @@ const FestivalDetailPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [id]);
 
+  const { t } = useTranslation();
+
   if (!festival) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8 bg-gray-100 text-gray-700">
-        <h2 className="text-3xl font-bold mb-4">축제를 찾을 수 없습니다 😢</h2>
-        <p className="text-lg mb-8">존재하지 않거나 삭제된 축제 정보입니다.</p>
+        <h2 className="text-3xl font-bold mb-4">
+          {t("festival.detailPage.error.message.1")}😢
+        </h2>
+        <p className="text-lg mb-8">
+          {t("festival.detailPage.error.message.2")}
+        </p>
         <Link
           to="/festivals"
           className="px-6 py-3 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 transition duration-300"
         >
-          모든 축제 보러가기
+          {t("festival.detailPage.error.link")}
         </Link>
       </div>
     );
@@ -77,14 +84,16 @@ const FestivalDetailPage: React.FC = () => {
               {festival.name}
             </h1>
             <p className="text-lg text-gray-700 mb-6 border-b pb-4">
-              <span className="font-semibold text-red-600">기간 :</span>{" "}
+              <span className="font-semibold text-red-600">
+                {t("festival.detailPage.period")}
+              </span>{" "}
               {formatDate(festival.startDate)} ~ {formatDate(festival.endDate)}
             </p>
 
             {/* 개요/설명 */}
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2">
-                축제 소개
+                {t("festival.detailPage.description")}
               </h2>
               <p className="text-gray-700 leading-relaxed text-base">
                 {festival.description}
@@ -102,7 +111,10 @@ const FestivalDetailPage: React.FC = () => {
                 >
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"></path>
                 </svg>
-                <span className="font-semibold -ml-2">장소 : &nbsp;</span>{" "}
+                <span className="font-semibold -ml-2">
+                  {t("festival.detailPage.location")}
+                </span>
+                &nbsp;
                 {festival.place}, {festival.area}
               </div>
             </div>
@@ -128,7 +140,7 @@ const FestivalDetailPage: React.FC = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 ></path>
               </svg>
-              목록으로 돌아가기
+              {t("festival.detailPage.button")}
             </button>
           </div>
         </div>

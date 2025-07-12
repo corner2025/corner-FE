@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { dutyFreeShops } from "../../data/dutyFreeShop";
 import KakaoMapView from "../../components/KakaoMapView"; // KakaoMapView를 import하세요
 
 const DutyFreeShopDetailPage: React.FC = () => {
