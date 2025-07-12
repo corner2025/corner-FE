@@ -7,6 +7,7 @@ import DutyFreePage from "./pages/DutyFreePage";
 import TouristPage from "./pages/TouristPage";
 import FestivalPage from "./pages/FestivalPage";
 import MapPage from "./pages/MapPage";
+import SpotDetail from "./pages/MapPage/spotDetail";
 import FestivalDetailPage from "./components/FestivalDetailPage";
 import PerformanceDetailPage from "./components/PerformanceDetailPage";
 import PerformancePage from "./pages/PerformancePage";
@@ -15,6 +16,7 @@ import SearchPage from "./pages/SearchPage";
 import DutyFreeShopPage from "./pages/DutyFreeShopPage";
 import DutyFreeShopDetailPage from "./pages/DutyFreeShopDetailPage";
 import CalendarPage from "./pages/CalendarPage";
+
 
 function Layout() {
   return (
@@ -48,10 +50,12 @@ function App() {
         <Route path="/performance/:id" element={<PerformanceDetailPage />} />
         {/* 일정 캘린더 */}
         <Route path="/calendar" element={<CalendarPage />} />
-        {/* 여행 지도 */}
+        {/* 여행 지도, 관광지 상세정보 */}
         <Route path="/map" element={<MapPage />} />
+        <Route path="/spot/:id" element={<SpotDetail />} />
         {/* 검색 페이지 */}
         <Route path="/search" element={<SearchPage />} />
+        
       </Route>
       {/* 관리자 로그인 */}
       <Route path="/admin" element={<LoginPage />} />

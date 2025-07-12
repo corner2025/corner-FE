@@ -23,22 +23,22 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_NAME }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           source: .
-          target: "/home/ec2-user/corner-FE/"
+          target: "/home/corner/corner2025/cornerFE/"
 
       - name: Run remote deploy
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_NAME }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
             set -ex
 
-            cd /home/ec2-user/corner-FE
+            cd /home/corner/corner2025/cornerFE
 
             # env만들기
             touch .env
@@ -47,7 +47,6 @@ jobs:
 
             chmod 600 .env
             
-            docker-compose down || true
-            docker system prune -a  # 쓸데없는거 지우기 ㅎㅎ
-            docker-compose build --no-cache
-            docker-compose up -d --force-recreate
+            docker compose down -v --rmi all --remove-orphans || true
+            docker compose build --no-cache
+            docker compose up -d --force-recreate
