@@ -1,0 +1,306 @@
+{
+  "navbar": {
+    "home": "Home",
+    "duty-free shop": "Duty-Free Shop",
+    "tour": "Tour",
+    "festival": "Festival",
+    "performance": "Performance",
+    "calendar": "Calendar",
+    "map": "Map",
+    "search": "Search",
+    "searchPlaceholder": "Enter search term..."
+  },
+
+  "footer": {
+    "website": {
+      "title": "About Us",
+      "description": {
+        "1": "Travel, Shopping, Culture, Festivals, and Performances",
+        "2": "Everything you need to know about traveling to Korea in one place!",
+        "3": "With the Korea Travel Hub,",
+        "4": "from planning to enjoying your trip",
+        "5": "we promise a smart and enjoyable experience."
+      }
+    },
+    "quickLinks": {
+      "title": "Quick Links",
+      "home": "Home",
+      "duty-free shop": "Duty-Free Shop",
+      "tour": "Tour",
+      "festival": "Festival",
+      "performance": "Performance",
+      "calendar": "Calendar",
+      "map": "Map"
+    },
+    "contact": {
+      "title": "Contact",
+      "address": "501, Jinju-daero, Jinju-si, Gyeongsangnam-do",
+      "phone": "Tel: ",
+      "email": "Email: ",
+      "workingHours": "Weekdays 09:00 to 18:00 (Closed weekends/holidays)"
+    },
+    "social": {
+      "title": "Social Media",
+      "description": {
+        "1": "Search ",
+        "2": " on social media!"
+      }
+    }
+  },
+
+  "main": {
+    "1": {
+      "intro": {
+        "1": "Travel, shopping, festivals, shows and attractions, ",
+        "2": "at a glance!"
+      },
+      "button": {
+        "1": "Explore Tourist Spots",
+        "2": "Find a duty-free shop"
+      }
+    },
+    "2": {
+      "title": "Suggested attractions",
+      "subtitle": "Popular tourist destinations right now",
+      "button": "View all tourist spots"
+    },
+    "3": {
+      "title": "Travel Guide",
+      "list": {
+        "1": " Travel preparation checklist",
+        "2": " Recommended popular travel courses",
+        "3": " Duty-free shopping tips collection",
+        "4": " Festival/performance schedules at a glance"
+      },
+      "info": {
+        "1": "For more information, check the ",
+        "2": "calendar",
+        "3": " and ",
+        "4": "travel map",
+        "5": "!"
+      }
+    },
+    "4": {
+      "title": "Duty-Free Shop Ranking",
+      "subtitle": "Popular Items",
+      "count": " items",
+      "button": "View all duty-free shops "
+    },
+    "5": {
+      "title": "Festival News",
+      "error": "No recent festival information available.",
+      "button": "View all "
+    },
+    "6": {
+      "title": "Performance Information",
+      "error": "No recent performance information available.",
+      "button": "View all "
+    },
+    "7": {
+      "title": "Schedule Calendar",
+      "info": "Check travel, festival, and performance schedules at a glance!"
+    },
+    "8": {
+      "title": "Travel Map",
+      "info": "Travel destinations, duty-free shops, festivals, and performances based on your location!"
+    },
+    "9": {
+      "description": {
+        "1": " is ",
+        "2": "an integrated travel information platform",
+        "3": " for both travelers and locals."
+      }
+    }
+  },
+
+  "dutyFreeShop": {
+    "title": "Duty-Free Item Rankings & Nearby Information",
+    "subtitle": "Popular item sales and nearby duty-free shop information at a glance",
+    "period": {
+      "month": "Monthly",
+      "year": "Yearly"
+    },
+    "rankingCard": {
+      "title": "Sales Ranking",
+      "error": "No data available",
+      "count": " items"
+    },
+    "chartCard": {
+      "title": {
+        "1": "",
+        "2": " Sales Chart by Item"
+      },
+      "sale": {
+        "avgMonth": "Average Monthly Sales",
+        "avgYear": "Average Yearly Sales"
+      }
+    },
+    "nearByShop": {
+      "title": "Nearby Duty-Free Shops Based on Your Location",
+      "more": "View all duty-free shops",
+      "list": {
+        "move": "Move to this Location",
+        "detail": "Details"
+      }
+    },
+    "map": {
+      "title": "View Location on Map",
+      "loading": "Loading your location information..."
+    },
+    "modal": {
+      "address": "Address:",
+      "workingHours": "Working Hours:",
+      "distance": "Distance:",
+      "phone": "Phone:",
+      "map": {
+        "title": "Map:",
+        "content": "External Map/Directions",
+        "move": "Move map to this location"
+      },
+      "info": "Brands in Store:",
+      "review": "Customer Reviews:",
+      "button": "Close"
+    },
+    "list": {
+      "title": "Nationwide Duty-Free Shop Branch List",
+      "placeholder": "Search by branch name or address",
+      "error": "No search results found."
+    }
+  },
+
+  "tour": {
+    "title": "The Best Photo Spots for Your Shots!",
+    "filter": {
+      "placeholder": "Search by tourist spot name, address, or description...",
+      "option": {
+        "all": "All Regions",
+        "11": "Seoul",
+        "26": "Busan",
+        "27": "Daegu",
+        "28": "Incheon",
+        "29": "Gwangju",
+        "30": "Daejeon",
+        "31": "Ulsan",
+        "36": "Sejong",
+        "41": "Gyeonggi-do",
+        "42": "Gangwon-do",
+        "43": "Chungcheongbuk-do",
+        "44": "Chungcheongnam-do",
+        "45": "Jeollabuk-do",
+        "46": "Jeollanam-do",
+        "47": "Gyeongsangbuk-do",
+        "48": "Gyeongsangnam-do",
+        "50": "Jeju"
+      }
+    },
+    "error": "No results found. Try a different keyword or region!",
+    "detailPage": {
+      "error": {
+        "message": "Tourist information could not be found.",
+        "button": "Back to List"
+      },
+      "toList": "To List",
+      "info": {
+        "title": "Basic Information",
+        "address": "Address:",
+        "map": "Directions",
+        "area": "Area:",
+        "classification": "Category:",
+        "workingHours": "Operating Hours:",
+        "fee": "Admission Fee:",
+        "wayToGo": "How to Get There:",
+        "homepage": "Homepage:",
+        "infocenter": "Info center:",
+        "parking": "Parking Info :",
+        "usetime": "Opening Hours:",
+        "restdate": "Day Off:"
+      },
+      "intro": "Introduction",
+      "facilities": "Nearby Facilities",
+      "restaurants": " Nearby Restaurants",
+      "lodgings": " Nearby Accommodations",
+      "facilitiesError": "No information on nearby facilities.",
+      "location": "Location Information",
+      "view": "View Larger on KakaoMap "
+    }
+  },
+
+  "area": {
+    "all": "All Regions",
+    "11": "Seoul",
+    "26": "Busan",
+    "27": "Daegu",
+    "28": "Incheon",
+    "29": "Gwangju",
+    "30": "Daejeon",
+    "31": "Ulsan",
+    "36": "Sejong",
+    "41": "Gyeonggi-do",
+    "42": "Gangwon-do",
+    "43": "Chungcheongbuk-do",
+    "44": "Chungcheongnam-do",
+    "45": "Jeollabuk-do",
+    "46": "Jeollanam-do",
+    "47": "Gyeongsangbuk-do",
+    "48": "Gyeongsangnam-do",
+    "50": "Jeju"
+  },
+  "searchInput": {
+    "placeholder": "Search by keyword"
+  },
+  "dateInput": {
+    "placeholder": "Select a date",
+    "ariaLabel": "Date input"
+  },
+
+  "festival": {
+    "title": "What's the hottest festival right now?",
+    "error": "There are no festivals matching your selected criteria.",
+    "detailPage": {
+      "error": {
+        "message": {
+          "1": "Festival not found.",
+          "2": "This festival does not exist or has been deleted."
+        },
+        "link": "See all festivals"
+      },
+      "period": "Period :",
+      "description": "Festival Description",
+      "location": "Location :",
+      "button": "Back to List"
+    }
+  },
+
+  "performance": {
+    "title": "What's the hottest performance right now?",
+    "error": "There are no performances matching your selected criteria.",
+    "detailPage": {
+      "error": {
+        "message": {
+          "1": "Performance not found.",
+          "2": "This performance does not exist or has been deleted."
+        },
+        "link": "See all performances"
+      },
+      "period": "Period :",
+      "description": "Performance Description",
+      "location": "Location :",
+      "button": "Back to List",
+      "ing": "The show is currently in progress.",
+      "stop": "The show is over."
+    }
+  },
+
+  "calendar": {
+    "title": "Performance & Festival Schedule",
+    "subtitle": "You can use the toggle buttons to view only the schedules you want!",
+    "toggle": {
+      "all": "All",
+      "performance": "Perform",
+      "festival": "Festival"
+    }
+  },
+
+  "loadingPage": "Loading...",
+  "wait": "Please wait a moment"
+}

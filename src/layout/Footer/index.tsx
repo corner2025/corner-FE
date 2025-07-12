@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -17,28 +20,28 @@ const Footer = () => {
           <div className="flex flex-col items-start">
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-700 via-blue-500 to-yellow-400 bg-clip-text text-transparent select-none">
-                Korea Travel Hub
+                {t("footer.website.title")}
               </span>
             </div>
             <p className="text-base text-gray-500 font-medium leading-relaxed mt-2">
-              여행, 쇼핑, 문화, 축제, 공연까지
+              {t("footer.website.description.1")}
               <br />
               <span className="text-blue-500 font-semibold">
-                한 곳에서 만나는 대한민국 여행의 모든 것!
+                {t("footer.website.description.2")}
               </span>
               <br />
-              Korea Travel Hub와 함께라면,
+              {t("footer.website.description.3")}
               <br />
-              여행 준비부터 즐기는 순간까지
+              {t("footer.website.description.4")}
               <br />
-              스마트하고 즐거운 경험을 약속드립니다.
+              {t("footer.website.description.5")}
             </p>
           </div>
 
           {/* 빠른 링크 */}
           <div>
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-              빠른 링크
+              {t("footer.quickLinks.title")}
             </h3>
             <ul className="space-y-2 font-medium">
               <li>
@@ -47,7 +50,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors flex items-center gap-1"
                 >
-                  홈
+                  {t("footer.quickLinks.home")}
                 </Link>
               </li>
               <li>
@@ -56,7 +59,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  면세점
+                  {t("footer.quickLinks.duty-free shop")}
                 </Link>
               </li>
               <li>
@@ -65,7 +68,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  관광지
+                  {t("footer.quickLinks.tour")}
                 </Link>
               </li>
               <li>
@@ -74,7 +77,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  축제정보
+                  {t("footer.quickLinks.festival")}
                 </Link>
               </li>
               <li>
@@ -83,7 +86,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  공연정보
+                  {t("footer.quickLinks.performance")}
                 </Link>
               </li>
               <li>
@@ -92,7 +95,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  일정/캘린더
+                  {t("footer.quickLinks.calendar")}
                 </Link>
               </li>
               <li>
@@ -101,7 +104,7 @@ const Footer = () => {
                   onClick={scrollToTop}
                   className="hover:text-blue-600 transition-colors"
                 >
-                  여행지도
+                  {t("footer.quickLinks.map")}
                 </Link>
               </li>
             </ul>
@@ -109,24 +112,30 @@ const Footer = () => {
 
           {/* 연락처 */}
           <div>
-            <h3 className="text-xl font-bold mb-4">고객센터</h3>
+            <h3 className="text-xl font-bold mb-4">
+              {t("footer.contact.title")}
+            </h3>
             <ul className="space-y-2 text-gray-500 text-base">
-              <li>경상남도 진주시 진주대로 501</li>
+              <li>{t("footer.contact.address")}</li>
               <li>
-                이메일: <span className="text-blue-500">abc@gmail.com</span>
+                {t("footer.contact.phone")}
+                <span className="text-blue-500">02-1234-5678</span>
               </li>
               <li>
-                문의전화: <span className="text-blue-500">010-0000-0000</span>
+                {t("footer.contact.email")}
+                <span className="text-blue-500">info@example.com</span>
               </li>
               <li className="text-xs text-gray-400">
-                평일 09:00 ~ 18:00 (주말/공휴일 휴무)
+                {t("footer.contact.workingHours")}
               </li>
             </ul>
           </div>
 
           {/* 소셜 미디어 */}
           <div>
-            <h3 className="text-xl font-bold mb-4">소셜 미디어</h3>
+            <h3 className="text-xl font-bold mb-4">
+              {t("footer.social.title")}
+            </h3>
             <div className="flex space-x-4 mt-2">
               <a
                 href="#"
@@ -158,11 +167,11 @@ const Footer = () => {
               </a>
             </div>
             <div className="mt-6 text-xs text-gray-400">
-              SNS에서{" "}
+              {t("footer.social.description.1")}
               <span className="font-semibold text-blue-500">
                 #KoreaTravelHub
               </span>
-              를 검색해보세요!
+              {t("footer.social.description.2")}
             </div>
           </div>
         </div>

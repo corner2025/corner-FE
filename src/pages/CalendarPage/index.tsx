@@ -1,12 +1,46 @@
 import { useRef, useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { performances } from "../../data/performance";
-import { festivals } from "../../data/festival";
 import type { FilterType } from "./sections/CalendarFilterToggle";
 import CalendarFilterToggle from "./sections/CalendarFilterToggle";
 import CalendarHeader from "./sections/CalendarHeader";
 import EventCalendar from "./sections/EventCalendar";
 import EventList from "./sections/EventList";
+import { festivals } from "../../data/festival"; // 더미 데이터
+import { useTranslation } from "react-i18next";
+
+// Performance 타입 정의
+type Performance = {
+  id: string;
+  name: string;
+  area: string;
+  genre: string;
+  startDate: string; // ex) "2025.07.31"
+  endDate: string; // ex) "2025.07.31"
+  posterUrl?: string;
+  state: string;
+  openRun: string;
+};
+
+// 점(.) 날짜 문자열을 Date로 변환
+function parseDotDate(str: string): Date {
+  const [y, m, d] = str.split(".").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+// 날짜 범위 포맷 (Date 타입만 받음)
+function formatDateRange(start: Date, end: Date) {
+  const s = start;
+  const e = end;
+  const startStr = `${s.getFullYear()}.${String(s.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}.${String(s.getDate()).padStart(2, "0")}`;
+  const endStr = `${e.getFullYear()}.${String(e.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}.${String(e.getDate()).padStart(2, "0")}`;
+  return startStr === endStr ? startStr : `${startStr} ~ ${endStr}`;
+}
 
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -14,13 +48,31 @@ const CalendarPage = () => {
   const calendarRef = useRef<FullCalendar>(null);
   const [viewTitle, setViewTitle] = useState<string>("");
 
+  // 공연 데이터 fetch
+  const [performances, setPerformances] = useState<Performance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_SERVER_URL}performances`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPerformances(data.content || []);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("데이터를 불러오지 못했습니다.");
+        setLoading(false);
+      });
+  }, []);
+
   // 날짜 클릭 시 해당 날짜의 공연/축제만 필터링
   const getEventsForDate = (dateStr: string) => {
     const date = new Date(dateStr);
 
     const perfList = performances.filter((perf) => {
-      const start = new Date(perf.startDate);
-      const end = new Date(perf.endDate);
+      const start = parseDotDate(perf.startDate);
+      const end = parseDotDate(perf.endDate);
       return date >= start && date <= end;
     });
 
@@ -84,20 +136,10 @@ const CalendarPage = () => {
     return () => window.removeEventListener("resize", resize);
   }, [viewTitle]);
 
-  // 날짜 범위 포맷
-  function formatDateRange(start: Date, end: Date) {
-    const s = new Date(start);
-    const e = new Date(end);
-    const startStr = `${s.getFullYear()}.${String(s.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}.${String(s.getDate()).padStart(2, "0")}`;
-    const endStr = `${e.getFullYear()}.${String(e.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}.${String(e.getDate()).padStart(2, "0")}`;
-    return startStr === endStr ? startStr : `${startStr} ~ ${endStr}`;
-  }
+  const { t } = useTranslation();
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return { error };
 
   return (
     <div className="bg-gradient-to-br from-blue-100 via-pink-50 to-yellow-100 py-8 px-4 flex flex-col items-center rounded-2xl mb-10 shadow-xl">
@@ -109,10 +151,10 @@ const CalendarPage = () => {
           style={{ minHeight: 0 }}
         >
           <h1 className="text-2xl sm:text-4xl font-extrabold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-400">
-            공연&축제 일정
+            {t("calendar.title")}
           </h1>
           <p className="text-sm sm:text-md text-center text-gray-500 mb-8">
-            토글 버튼으로 원하는 일정만 골라서 볼 수 있어요!
+            {t("calendar.subtitle")}
           </p>
           {/* 토글 버튼 */}
           <CalendarFilterToggle filter={filter} setFilter={setFilter} />

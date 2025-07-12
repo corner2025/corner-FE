@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { dutyFreeProducts } from "../../data/dutyFreeProduct";
-import { touristSpots } from "../../data/tourist";
-import { festivals } from "../../data/festival";
-import { performances } from "../../data/performance";
+import { useTranslation } from "react-i18next";
+import {
+  dutyFreeProducts,
+  festivals,
+  performances,
+  touristSpots,
+} from "../../data/temp";
 
 const getYear = () => new Date().getFullYear().toString();
 
@@ -11,14 +14,8 @@ const getLatestFestival = () => {
   if (!festivals.length) return [];
   return [...festivals]
     .sort((a, b) => {
-      const aStart =
-        a.startDate instanceof Date
-          ? a.startDate.getTime()
-          : new Date(a.startDate).getTime();
-      const bStart =
-        b.startDate instanceof Date
-          ? b.startDate.getTime()
-          : new Date(b.startDate).getTime();
+      const aStart = new Date(a.startDate).getTime();
+      const bStart = new Date(b.startDate).getTime();
       return bStart - aStart;
     })
     .slice(0, 1);
@@ -27,6 +24,8 @@ const getLatestFestival = () => {
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
 const MainPage: React.FC = () => {
+  const { t } = useTranslation();
+
   const topDutyFree = [...dutyFreeProducts]
     .filter((p) => p.year_month.startsWith(getYear()))
     .sort((a, b) => b.sales_count - a.sales_count)
@@ -48,8 +47,10 @@ const MainPage: React.FC = () => {
             Korea Travel Hub
           </h1>
           <p className="text-white text-lg font-medium drop-shadow mb-6 animate-fade-in">
-            여행·쇼핑·축제·공연·관광지,{" "}
-            <span className="font-bold text-yellow-100">한눈에 즐기기!</span>
+            {t("main.1.intro.1")}
+            <span className="font-bold text-yellow-100">
+              {t("main.1.intro.2")}
+            </span>
           </p>
           <div className="flex gap-4 mt-2">
             <Link
@@ -57,14 +58,14 @@ const MainPage: React.FC = () => {
               onClick={scrollToTop}
               className="px-6 py-3 rounded-xl bg-white/90 text-blue-700 font-bold shadow hover:bg-blue-100 transition"
             >
-              관광지 탐색
+              {t("main.1.button.1")}
             </Link>
             <Link
               to="/dutyfree"
               onClick={scrollToTop}
               className="px-6 py-3 rounded-xl bg-yellow-300/90 text-yellow-900 font-bold shadow hover:bg-yellow-200 transition"
             >
-              면세점 찾기
+              {t("main.1.button.2")}
             </Link>
           </div>
         </div>
@@ -82,9 +83,9 @@ const MainPage: React.FC = () => {
             <div>
               <span className="text-3xl">🏞️</span>
               <h2 className="text-2xl font-extrabold text-green-700 mt-2 mb-3">
-                관광지 추천
+                {t("main.2.title")}
               </h2>
-              <div className="text-gray-600 mb-2">지금 인기있는 관광지</div>
+              <div className="text-gray-600 mb-2">{t("main.2.subtitle")}</div>
               <ul className="space-y-1">
                 {topTourist.map((spot) => (
                   <li key={spot.id} className="flex items-center gap-2">
@@ -98,7 +99,7 @@ const MainPage: React.FC = () => {
               </ul>
             </div>
             <span className="inline-block mt-4 text-green-700 font-bold group-hover:underline">
-              관광지 전체보기 →
+              {t("main.2.button")}→
             </span>
           </div>
         </Link>
@@ -110,44 +111,46 @@ const MainPage: React.FC = () => {
         >
           <div className="flex items-center gap-2 mb-3">
             <span className="text-3xl text-pink-400">📚</span>
-            <span className="text-xl font-bold text-pink-700">여행 가이드</span>
+            <span className="text-xl font-bold text-pink-700">
+              {t("main.3.title")}
+            </span>
           </div>
           <ul className="text-gray-700 text-base space-y-1 mb-2">
             <li>
-              <span className="font-semibold text-pink-500">•</span> 여행 준비
-              체크리스트
+              <span className="font-semibold text-pink-500">•</span>
+              {t("main.3.list.1")}
             </li>
             <li>
-              <span className="font-semibold text-pink-500">•</span> 인기 여행
-              코스 추천
+              <span className="font-semibold text-pink-500">•</span>
+              {t("main.3.list.2")}
             </li>
             <li>
-              <span className="font-semibold text-pink-500">•</span> 면세 쇼핑
-              꿀팁 모음
+              <span className="font-semibold text-pink-500">•</span>
+              {t("main.3.list.3")}
             </li>
             <li>
-              <span className="font-semibold text-pink-500">•</span> 축제/공연
-              일정 한눈에
+              <span className="font-semibold text-pink-500">•</span>
+              {t("main.3.list.4")}
             </li>
           </ul>
           <div className="text-xs text-gray-400 mt-2">
-            더 많은 정보는{" "}
+            {t("main.3.info.1")}
             <Link
               to="/calendar"
               onClick={scrollToTop}
               className="underline text-pink-500"
             >
-              캘린더
-            </Link>{" "}
-            및{" "}
+              {t("main.3.info.2")}
+            </Link>
+            {t("main.3.info.3")}
             <Link
               to="/map"
               onClick={scrollToTop}
               className="underline text-pink-500"
             >
-              여행 지도
+              {t("main.3.info.4")}
             </Link>
-            에서 확인!
+            {t("main.3.info.5")}
           </div>
         </div>
 
@@ -162,23 +165,24 @@ const MainPage: React.FC = () => {
             <div>
               <span className="text-3xl">🛍️</span>
               <h2 className="text-2xl font-extrabold text-yellow-700 mt-2 mb-3">
-                면세점 랭킹
+                {t("main.4.title")}
               </h2>
-              <div className="text-gray-600 mb-2">인기 품목</div>
+              <div className="text-gray-600 mb-2">{t("main.4.subtitle")}</div>
               <ul className="space-y-1">
                 {topDutyFree.map((item) => (
                   <li key={item.category} className="flex items-center gap-2">
                     <span className="font-bold text-yellow-500">•</span>
                     <span className="font-semibold">{item.category}</span>
                     <span className="text-gray-400 text-xs">
-                      {item.sales_count.toLocaleString()}개
+                      {item.sales_count.toLocaleString()}
+                      {t("main.4.count")}
                     </span>
                   </li>
                 ))}
               </ul>
             </div>
             <span className="inline-block mt-4 text-yellow-700 font-bold group-hover:underline">
-              면세점 전체보기 →
+              {t("main.4.button")}→
             </span>
           </div>
         </Link>
@@ -195,7 +199,7 @@ const MainPage: React.FC = () => {
             <div>
               <span className="text-2xl">🎉</span>
               <h3 className="text-xl font-bold text-blue-600 mt-2 mb-2">
-                축제 소식
+                {t("main.5.title")}
               </h3>
               {topFestival.length > 0 ? (
                 <div>
@@ -204,23 +208,17 @@ const MainPage: React.FC = () => {
                     {topFestival[0].place || ""}
                   </div>
                   <div className="text-gray-400 text-xs">
-                    {topFestival[0].startDate instanceof Date
-                      ? topFestival[0].startDate.toLocaleDateString()
-                      : new Date(topFestival[0].startDate).toLocaleDateString()}
+                    {new Date(topFestival[0].startDate).toLocaleDateString()}
                     {" ~ "}
-                    {topFestival[0].endDate instanceof Date
-                      ? topFestival[0].endDate.toLocaleDateString()
-                      : new Date(topFestival[0].endDate).toLocaleDateString()}
+                    {new Date(topFestival[0].endDate).toLocaleDateString()}
                   </div>
                 </div>
               ) : (
-                <div className="text-gray-400 text-sm">
-                  최근 축제 정보가 없습니다.
-                </div>
+                <div className="text-gray-400 text-sm">{t("main.5.error")}</div>
               )}
             </div>
             <span className="mt-4 text-blue-600 font-bold group-hover:underline">
-              전체보기 →
+              {t("main.5.button")}→
             </span>
           </Link>
           {/* 공연 정보 */}
@@ -233,7 +231,7 @@ const MainPage: React.FC = () => {
             <div>
               <span className="text-2xl">🎭</span>
               <h3 className="text-xl font-bold text-purple-700 mt-2 mb-2">
-                공연 정보
+                {t("main.6.title")}
               </h3>
               {topPerformance.length > 0 ? (
                 <div>
@@ -242,27 +240,17 @@ const MainPage: React.FC = () => {
                     {topPerformance[0].place}
                   </div>
                   <div className="text-gray-400 text-xs">
-                    {topPerformance[0].startDate instanceof Date
-                      ? topPerformance[0].startDate.toLocaleDateString()
-                      : new Date(
-                          topPerformance[0].startDate
-                        ).toLocaleDateString()}
+                    {new Date(topPerformance[0].startDate).toLocaleDateString()}
                     {" ~ "}
-                    {topPerformance[0].endDate instanceof Date
-                      ? topPerformance[0].endDate.toLocaleDateString()
-                      : new Date(
-                          topPerformance[0].endDate
-                        ).toLocaleDateString()}
+                    {new Date(topPerformance[0].endDate).toLocaleDateString()}
                   </div>
                 </div>
               ) : (
-                <div className="text-gray-400 text-sm">
-                  최근 공연 정보가 없습니다.
-                </div>
+                <div className="text-gray-400 text-sm">{t("main.6.error")}</div>
               )}
             </div>
             <span className="mt-4 text-purple-700 font-bold group-hover:underline">
-              전체보기 →
+              {t("main.6.button")}→
             </span>
           </Link>
         </div>
@@ -278,11 +266,9 @@ const MainPage: React.FC = () => {
           <span className="text-4xl text-orange-400">🗓️</span>
           <div>
             <div className="text-lg font-bold text-gray-900 group-hover:text-orange-500 transition">
-              일정 캘린더
+              {t("main.7.title")}
             </div>
-            <div className="text-gray-500 text-sm">
-              여행, 축제, 공연 일정을 한눈에!
-            </div>
+            <div className="text-gray-500 text-sm">{t("main.7.info")}</div>
           </div>
         </Link>
         <Link
@@ -293,23 +279,21 @@ const MainPage: React.FC = () => {
           <span className="text-4xl text-blue-400">🗺️</span>
           <div>
             <div className="text-lg font-bold text-gray-900 group-hover:text-blue-500 transition">
-              여행 지도
+              {t("main.8.title")}
             </div>
-            <div className="text-gray-500 text-sm">
-              내 위치 기반 여행지, 면세점, 축제, 공연 정보!
-            </div>
+            <div className="text-gray-500 text-sm">{t("main.8.info")}</div>
           </div>
         </Link>
       </section>
 
       {/* 안내 문구 */}
       <footer className="max-w-4xl mx-auto px-4 text-center text-gray-400 text-sm mt-16">
-        <span className="font-semibold text-blue-500">Korea Travel Hub</span>는
-        여행자와 내국인 모두를 위한{" "}
+        <span className="font-semibold text-blue-500">Korea Travel Hub</span>
+        {t("main.9.description.1")}
         <span className="font-semibold text-yellow-600">
-          통합 여행 정보 플랫폼
+          {t("main.9.description.2")}
         </span>
-        입니다.
+        {t("main.9.description.3")}
       </footer>
     </div>
   );

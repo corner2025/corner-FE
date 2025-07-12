@@ -1,6 +1,7 @@
 import React from "react";
 import type { DutyFreeShop } from "../../../types/dutyFreeshop";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 interface DutyFreeShopListProps {
   shops: (DutyFreeShop & { distance?: number })[];
@@ -13,6 +14,8 @@ const DutyFreeShopList: React.FC<DutyFreeShopListProps> = ({
   onDetail,
   onMoveMap = () => {},
 }) => {
+  const { t } = useTranslation();
+
   return (
     <ul className="space-y-4">
       {shops.map((store, idx) => (
@@ -91,13 +94,13 @@ const DutyFreeShopList: React.FC<DutyFreeShopListProps> = ({
               title="이 위치로 지도 이동"
             >
               <FaMapMarkerAlt className="text-pink-500" />
-              지도 이동
+              {t("dutyFreeShop.nearByShop.list.move")}
             </button>
             <button
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition"
               onClick={() => onDetail && onDetail(store)}
             >
-              상세정보
+              {t("dutyFreeShop.nearByShop.list.detail")}
             </button>
           </div>
         </li>

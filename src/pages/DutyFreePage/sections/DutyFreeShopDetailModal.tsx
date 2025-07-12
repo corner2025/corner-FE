@@ -1,5 +1,6 @@
 import React from "react";
 import type { DutyFreeShop } from "../../../types/dutyFreeshop";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   shop: (DutyFreeShop & { distance?: number }) | null;
@@ -18,22 +19,29 @@ const DutyFreeShopDetailModal: React.FC<Props> = ({
   onClose,
   onMoveMap,
 }) => {
+  const { t } = useTranslation();
   if (!shop) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fade-in">
         <h3 className="text-2xl font-bold mb-4 text-blue-700">{shop.name}</h3>
         <div className="mb-2 text-gray-700 flex items-center gap-2">
-          <span className="font-semibold">주소:</span>
+          <span className="font-semibold">
+            {t("dutyFreeShop.modal.address")}
+          </span>
           <span>{shop.address}</span>
         </div>
         <div className="mb-2 text-gray-700 flex items-center gap-2">
-          <span className="font-semibold">영업시간:</span>
+          <span className="font-semibold">
+            {t("dutyFreeShop.modal.workingHours")}
+          </span>
           <span>{shop.opening_hours}</span>
         </div>
         {typeof shop.distance === "number" && (
           <div className="mb-2 text-gray-700 flex items-center gap-2">
-            <span className="font-semibold">거리:</span>
+            <span className="font-semibold">
+              {t("dutyFreeShop.modal.distance")}
+            </span>
             <span>
               {shop.distance < 1
                 ? `${(shop.distance * 1000).toFixed(0)}m`
@@ -42,11 +50,13 @@ const DutyFreeShopDetailModal: React.FC<Props> = ({
           </div>
         )}
         <div className="mb-2 text-gray-700 flex items-center gap-2">
-          <span className="font-semibold">전화:</span>
+          <span className="font-semibold">{t("dutyFreeShop.modal.phone")}</span>
           <span>{shop.phone}</span>
         </div>
         <div className="mb-2 text-gray-700 flex items-center gap-2">
-          <span className="font-semibold">지도:</span>
+          <span className="font-semibold">
+            {t("dutyFreeShop.modal.map.title")}
+          </span>
           <a
             href={
               shop.latitude && shop.longitude
@@ -59,19 +69,19 @@ const DutyFreeShopDetailModal: React.FC<Props> = ({
             rel="noopener noreferrer"
             className="text-blue-600 underline"
           >
-            외부 지도/길찾기
+            {t("dutyFreeShop.modal.map.content")}
           </a>
           <button
             className="ml-2 px-3 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold hover:bg-blue-200 transition"
             onClick={() => onMoveMap && onMoveMap(shop)}
           >
-            이 위치로 지도 이동
+            {t("dutyFreeShop.modal.map.move")}
           </button>
         </div>
         {/* 더미 브랜드 정보 */}
         <div className="mt-4">
           <div className="font-semibold text-gray-800 mb-1">
-            입점 브랜드(예시):
+            {t("dutyFreeShop.modal.info")}
           </div>
           <ul className="flex flex-wrap gap-2">
             {dummyBrands.map((brand) => (
@@ -87,7 +97,7 @@ const DutyFreeShopDetailModal: React.FC<Props> = ({
         {/* 더미 리뷰 정보 */}
         <div className="mt-4">
           <div className="font-semibold text-gray-800 mb-1">
-            고객 리뷰(예시):
+            {t("dutyFreeShop.modal.review")}
           </div>
           <ul className="space-y-1">
             {dummyReviews.map((r, i) => (
@@ -108,7 +118,7 @@ const DutyFreeShopDetailModal: React.FC<Props> = ({
             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition"
             onClick={onClose}
           >
-            닫기
+            {t("dutyFreeShop.modal.button")}
           </button>
         </div>
       </div>

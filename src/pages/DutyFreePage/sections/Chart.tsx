@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   LineChart,
   Line,
@@ -11,8 +12,8 @@ import {
 
 type DataPoint = {
   name: string;
-  "월 평균 가격": number;
-  "연 평균 가격": number;
+  avgMonth: number;
+  avgYear: number;
 };
 
 type ChartProps = {
@@ -20,6 +21,8 @@ type ChartProps = {
 };
 
 const Chart: React.FC<ChartProps> = ({ data }) => {
+  const { t } = useTranslation();
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart
@@ -38,11 +41,17 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
         <Legend />
         <Line
           type="monotone"
-          dataKey="월 평균 가격"
+          dataKey="avgMonth"
           stroke="#8884d8"
           activeDot={{ r: 8 }}
+          name={t("dutyFreeShop.chartCard.sale.avgMonth")}
         />
-        <Line type="monotone" dataKey="연 평균 가격" stroke="#82ca9d" />
+        <Line
+          type="monotone"
+          dataKey="avgYear"
+          stroke="#82ca9d"
+          name={t("dutyFreeShop.chartCard.sale.avgYear")}
+        />
       </LineChart>
     </ResponsiveContainer>
   );
