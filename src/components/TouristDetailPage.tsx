@@ -67,7 +67,9 @@ const TouristDetailPage: React.FC = () => {
   const kakaoMapLink = `https://map.kakao.com/link/map/${spot.title},${spot.mapx},${spot.mapy}`;
 
   return (
-    <div className="container mx-auto p-4 md:p-8 bg-white shadow-lg rounded-xl my-8 animate-fade-in mb-15">
+    <div
+      className="p-3 rounded-[22.375px] transition relative cursor-pointer"
+      style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", marginBottom: "2rem" }}>
       <button
         onClick={() => navigate(-1)}
         className="mb-6 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out flex items-center"
@@ -161,7 +163,7 @@ const TouristDetailPage: React.FC = () => {
                 dangerouslySetInnerHTML={{ __html: spot.homepage }}
               />
             ) : (
-              <span className="text-gray-400">Page does not exist</span>
+              <span className="text-gray-400">공식 페이지가 없습니다.</span>
             )}
           </p>
         </div>

@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Select from "./sections/Select";
 import SearchInput from "./sections/SearchInput";
 import DateInput from "./sections/DateInput";
 import CardItem from "./sections/CardItem";
 import type { Performance } from "../../types/performance";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../utils/axios";
+
+const PAGE_SIZE = 10;
 
 const PerformancePage: React.FC = () => {
   const [areaFilter, setAreaFilter] = useState<string>("");
@@ -12,88 +15,86 @@ const PerformancePage: React.FC = () => {
   const [startDateFilter, setStartDateFilter] = useState<string>("");
   const [endDateFilter, setEndDateFilter] = useState<string>("");
 
-  const [performances, setPerformances] = useState<Performance[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
   const { t } = useTranslation();
+  const [performances, setPerformances] = useState<Performance[]>([]);
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_SERVER_URL}performances`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPerformances(data.content);
-        setLoading(false);
-      })
-      .catch(() => {
-        setError("데이터를 불러오지 못했습니다.");
-        setLoading(false);
-      });
-  }, []);
+  const fetchPerformances = async (currentPage: number, isReset = false) => {
+    if (loading) return;
 
-  // 공연 데이터에서 지역명 추출(중복 제거)
-  const areaOptions = useMemo(() => {
-    const areas = performances.map((p) => p.area).filter(Boolean);
-    return Array.from(new Set(areas));
-  }, [performances]);
+    console.log("fetchPerformances params:", {
+      page: currentPage,
+      size: PAGE_SIZE,
+      area: areaFilter,
+      keyword,
+      startDate: startDateFilter,
+      endDate: endDateFilter,
+    });
 
-  // YYYY.MM.DD → YYYYMMDD(숫자) 변환 함수
-  const dateToNumber = (date: string) =>
-    date ? parseInt(date.replace(/\./g, ""), 10) : 0;
+    setLoading(true);
+    try {
+      const params: any = {
+        page: currentPage,
+        size: PAGE_SIZE,
+        ...(areaFilter && { area: areaFilter }),
+        ...(keyword && { keyword }),
+        ...(startDateFilter && { startDate: startDateFilter }),
+        ...(endDateFilter && { endDate: endDateFilter }),
+      };
 
-  // 필터링된 공연 리스트
-  const filteredPerformances = performances.filter((performance) => {
-    // 지역 필터
-    if (areaFilter && performance.area !== areaFilter) return false;
+      const res = await axiosInstance.get("performances", { params });
+      const fetched = res.data.content;
 
-    // 검색어 필터
-    if (
-      keyword &&
-      !performance.name.toLowerCase().includes(keyword.toLowerCase())
-    )
-      return false;
+      if (isReset) {
+        setPerformances(fetched);
+      } else {
+        setPerformances((prev) => [...prev, ...fetched]);
+      }
 
-    // 날짜 필터 (공연 기간과 필터 기간이 겹치면 통과)
-    const filterStart = startDateFilter ? dateToNumber(startDateFilter) : null;
-    const filterEnd = endDateFilter ? dateToNumber(endDateFilter) : null;
-    const perfStart = dateToNumber(performance.startDate);
-    const perfEnd = dateToNumber(performance.endDate);
-
-    // 필터가 둘 다 없으면 모두 표시
-    if (!filterStart && !filterEnd) return true;
-
-    // 둘 다 있을 때: 공연 종료일 >= 필터 시작일 && 공연 시작일 <= 필터 종료일
-    if (filterStart && filterEnd) {
-      if (perfEnd < filterStart || perfStart > filterEnd) return false;
-      return true;
+      setHasMore(fetched.length === PAGE_SIZE);
+      setError("");
+    } catch (err) {
+      setError("데이터를 불러오는 데 실패했습니다.");
+      setHasMore(false);
+      console.error(err);
     }
-    // 시작일만 있을 때: 공연 종료일 >= 필터 시작일
-    if (filterStart && perfEnd < filterStart) return false;
-    // 종료일만 있을 때: 공연 시작일 <= 필터 종료일
-    if (filterEnd && perfStart > filterEnd) return false;
+    setLoading(false);
+  };
 
-    return true;
-  });
+  // 필터 변경 시 초기화 + 초기 데이터
+  useEffect(() => {
+    setPage(1);
+    setPerformances([]);
+    setHasMore(true);
+    fetchPerformances(1, true);
+  }, [areaFilter, keyword, startDateFilter, endDateFilter]);
 
-  if (loading)
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-blue-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-400 border-b-4 mb-6"></div>
-        <div className="text-2xl text-blue-600 font-semibold tracking-wide">
-          {t("loadingPage")}
-        </div>
-        <div className="text-sm text-gray-400 mt-2">{t("wait")}</div>
-      </div>
-    );
+  // 페이지 변경 시 추가 데이터
+  useEffect(() => {
+    if (page === 1) return;
+    fetchPerformances(page);
+  }, [page]);
 
-  if (error)
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-        <p className="col-span-full text-center text-xl text-gray-500 mt-10">
-          {t("performance.error")}
-        </p>
-      </div>
-    );
+  // 무한 스크롤 옵저버
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastPerformanceRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prev) => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4">
@@ -101,30 +102,35 @@ const PerformancePage: React.FC = () => {
         {t("performance.title")}
       </h1>
 
-      {/* 필터 UI */}
       <div className="grid grid-cols-2 md:flex flex-wrap gap-4 mb-10">
-        <Select
-          areaFilter={areaFilter}
-          setAreaFilter={setAreaFilter}
-          areaOptions={areaOptions}
-        />
+        <Select areaFilter={areaFilter} setAreaFilter={setAreaFilter} />
         <SearchInput keyword={keyword} setKeyword={setKeyword} />
-        <DateInput
-          dateFilter={startDateFilter}
-          setDateFilter={setStartDateFilter}
-        />
-        <DateInput
-          dateFilter={endDateFilter}
-          setDateFilter={setEndDateFilter}
-        />
+        <DateInput dateFilter={startDateFilter} setDateFilter={setStartDateFilter} />
+        <DateInput dateFilter={endDateFilter} setDateFilter={setEndDateFilter} />
       </div>
 
-      {/* 공연 리스트 */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
-        {filteredPerformances.map((performance: Performance) => (
-          <CardItem performance={performance} key={performance.id} />
-        ))}
+        {performances.length === 0 && !loading ? (
+          <p className="col-span-full text-center text-xl text-gray-500 mt-10">
+            {error || t("performance.error")}
+          </p>
+        ) : (
+          performances.map((performance, idx) => {
+            if (idx === performances.length - 1) {
+              return (
+                <div key={performance.id} ref={lastPerformanceRef}>
+                  <CardItem performance={performance} />
+                </div>
+              );
+            }
+            return <CardItem performance={performance} key={performance.id} />;
+          })
+        )}
       </div>
+
+      {loading && (
+        <p className="text-center text-gray-600">로딩 중...</p>
+      )}
     </div>
   );
 };
