@@ -16,11 +16,9 @@ const Select: React.FC<SelectProps> = ({ areaFilter, setAreaFilter }) => {
       value={areaFilter}
       onChange={(e) => setAreaFilter(e.target.value)}
     >
-      {areaCodes.map((areaCode) => (
-        <option key={areaCode.code} value={t(`area.${areaCode.code}`)}>
-          {t(`area.${areaCode.code}`) === "all"
-            ? "전체 지역"
-            : t(`area.${areaCode.code}`)}
+      {areaCodes.map(({ code, name }) => (
+        <option key={code} value={name === "전체 지역" ? "" : name}>
+          {name}
         </option>
       ))}
     </select>

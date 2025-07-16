@@ -14,6 +14,7 @@ const kakaoApiKey = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const MapPage = () => {
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   const navigate = useNavigate();
 

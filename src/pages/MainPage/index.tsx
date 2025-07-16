@@ -38,10 +38,13 @@ const MainPage: React.FC = () => {
   const cardMinHeight = { minHeight: 220 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 pb-10 rounded-md mb-10">
+    <div
+      className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-yellow-50 pb-10 rounded-[22.375px] mb-10"
+      style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+    >
       {/* Hero 배너 */}
       <section className="relative w-full h-[250px] sm:h-[320px] flex items-center justify-center mb-12">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-200 to-yellow-200 opacity-70 rounded-b-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-200 to-yellow-200 opacity-70 rounded-[22.375px]" style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}/>
         <div className="relative z-10 flex flex-col items-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-lg mb-4 tracking-tight animate-fade-in-down">
             Korea Travel Hub

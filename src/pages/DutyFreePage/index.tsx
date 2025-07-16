@@ -160,7 +160,10 @@ const DutyFreePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-5 mb-10 rounded-3xl">
+    <div
+      className="min-h-screen bg-gray-50 pb-5 mb-10 rounded-[22.375px]"
+      style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
+    >
       {/* 헤더 */}
       <header className="w-full bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto pt-7 pb-11 flex flex-col items-center">

@@ -9,13 +9,8 @@ interface CardItemProps {
 const CardItem: React.FC<CardItemProps> = ({ performance }) => {
   return (
     <div
-      className="
-  border-[1px] border-gray-300 rounded-md shadow-md p-3 m-2
-  transform transition-all duration-300 ease-in-out
-  hover:scale-105 hover:shadow-xl hover:-translate-y-2
-  cursor-pointer group relative
-"
-    >
+      className="p-3 rounded-[22.375px] transition relative cursor-pointer"
+      style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
       <Link to={`/performance/${performance.id}`}>
         {" "}
         <div className="w-full h-48 overflow-hidden rounded-md mb-2">

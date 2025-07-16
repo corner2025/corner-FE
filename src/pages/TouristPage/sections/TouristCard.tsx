@@ -11,7 +11,9 @@ type TouristCardProps = {
 const TouristCard: React.FC<TouristCardProps> = ({ spot }) => {
   return (
     <Link to={`/tourist/${spot.id}`} className="block">
-      <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 overflow-hidden">
+      <div
+      className="p-3 rounded-[22.375px] transition relative cursor-pointer"
+      style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
         <img
           src={spot.firstimage || spot.firstimage2 || "image"}
           alt="No Image Available"
