@@ -5,128 +5,243 @@ import CalendarFilterToggle from "./sections/CalendarFilterToggle";
 import CalendarHeader from "./sections/CalendarHeader";
 import EventCalendar from "./sections/EventCalendar";
 import EventList from "./sections/EventList";
-import { festivals } from "../../data/festival"; // 더미 데이터
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../utils/axios";
+import type { Festival } from "../../types/festival";
+import type { Performance } from "../../types/performance";
 
-// Performance 타입 정의
-type Performance = {
-  id: string;
-  name: string;
-  area: string;
-  genre: string;
-  startDate: string; // ex) "2025.07.31"
-  endDate: string; // ex) "2025.07.31"
-  posterUrl?: string;
-  state: string;
-  openRun: string;
-};
-
-// 점(.) 날짜 문자열을 Date로 변환
 function parseDotDate(str: string): Date {
   const [y, m, d] = str.split(".").map(Number);
   return new Date(y, m - 1, d);
 }
 
-// 날짜 범위 포맷 (Date 타입만 받음)
 function formatDateRange(start: Date, end: Date) {
   const s = start;
   const e = end;
-  const startStr = `${s.getFullYear()}.${String(s.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}.${String(s.getDate()).padStart(2, "0")}`;
-  const endStr = `${e.getFullYear()}.${String(e.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}.${String(e.getDate()).padStart(2, "0")}`;
+  const startStr = `${s.getFullYear()}.${String(s.getMonth() + 1).padStart(2, "0")}.${String(s.getDate()).padStart(2, "0")}`;
+  const endStr = `${e.getFullYear()}.${String(e.getMonth() + 1).padStart(2, "0")}.${String(e.getDate()).padStart(2, "0")}`;
   return startStr === endStr ? startStr : `${startStr} ~ ${endStr}`;
 }
 
-const CalendarPage = () => {
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [filter, setFilter] = useState<FilterType>("all");
-  const calendarRef = useRef<FullCalendar>(null);
-  const [viewTitle, setViewTitle] = useState<string>("");
+function formatDateToHyphen(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
 
-  // 공연 데이터 fetch
+const todayStr = new Date().toISOString().slice(0, 10);
+
+const CalendarPage = () => {
+  const calendarRef = useRef<FullCalendar | null>(null);
+
+  const [viewTitle, setViewTitle] = useState("");
+  const [filter, setFilter] = useState<FilterType>("performance");
+
   const [performances, setPerformances] = useState<Performance[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [pageNoPerformance, setPageNoPerformance] = useState(1);
+  const [hasMorePerformance, setHasMorePerformance] = useState(true);
+
+  const [festivals, setFestivals] = useState<Festival[]>([]);
+  const [pageNoFestival, setPageNoFestival] = useState(1);
+  const [hasMoreFestival, setHasMoreFestival] = useState(true);
+
+  const [loadingPerformance, setLoadingPerformance] = useState(false);
+  const [loadingFestival, setLoadingFestival] = useState(false);
+
   const [error, setError] = useState("");
 
+  const [clickDates, setClickDates] = useState<string[]>([todayStr]);
+  const [selectedRange, setSelectedRange] = useState<{ start: string; end: string }>({
+    start: todayStr,
+    end: todayStr,
+  });
+
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_SERVER_URL}performances`)
-      .then((res) => res.json())
-      .then((data) => {
-        setPerformances(data.content || []);
-        setLoading(false);
+    if (filter !== "performance") return;
+
+    setLoadingPerformance(true);
+    setError("");
+
+    const params = {
+      page: pageNoPerformance,
+      size: 7,
+      startDate: formatDateToHyphen(new Date(selectedRange.start)),
+      endDate: formatDateToHyphen(new Date(selectedRange.end)),
+    };
+
+    console.log("🎯 공연 요청 파라미터:", params);
+
+    axiosInstance
+      .get("performances", { params })
+      .then((res) => {
+        console.log("✅ 공연 응답 데이터:", res.data);
+        const content = res.data.content || [];
+        setPerformances((prev) => {
+          if (pageNoPerformance === 1) return content;
+          const newItems = content.filter((item: Performance) => !prev.some((p) => p.id === item.id));
+          return [...prev, ...newItems];
+        });
+        setHasMorePerformance(!res.data.last);
+        setLoadingPerformance(false);
       })
       .catch(() => {
-        setError("데이터를 불러오지 못했습니다.");
-        setLoading(false);
+        setError("공연 데이터를 불러오지 못했습니다.");
+        setLoadingPerformance(false);
       });
-  }, []);
+  }, [pageNoPerformance, filter, selectedRange]); // ← 수정됨
 
-  // 날짜 클릭 시 해당 날짜의 공연/축제만 필터링
-  const getEventsForDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+  useEffect(() => {
+    if (filter !== "festival") return;
+
+    setLoadingFestival(true);
+    setError("");
+
+    const params = {
+      pageNo: pageNoFestival,
+      pageSize: 7,
+      startDate: formatDateToHyphen(new Date(selectedRange.start)),
+      endDate: formatDateToHyphen(new Date(selectedRange.end)),
+    };
+
+    console.log("🎯 축제 요청 파라미터:", params);
+
+    axiosInstance
+      .get("festivals", { params })
+      .then((res) => {
+        console.log("✅ 축제 응답 데이터:", res.data);
+        const content = res.data.content || [];
+        setFestivals((prev) => {
+          if (pageNoFestival === 1) return content;
+          const newItems = content.filter((item: Festival) => !prev.some((f) => f.id === item.id));
+          return [...prev, ...newItems];
+        });
+        setHasMoreFestival(!res.data.last);
+        setLoadingFestival(false);
+      })
+      .catch(() => {
+        setError("축제 데이터를 불러오지 못했습니다.");
+        setLoadingFestival(false);
+      });
+  }, [pageNoFestival, filter, selectedRange]);
+
+  // 날짜가 바뀔 때마다 페이지 초기화
+  useEffect(() => {
+    if (filter === "performance") {
+      setPageNoPerformance(1);
+      setHasMorePerformance(true);
+      setPerformances([]);
+    } else if (filter === "festival") {
+      setPageNoFestival(1);
+      setHasMoreFestival(true);
+      setFestivals([]);
+    }
+  }, [selectedRange]);
+
+  const handleFilterChange = (newFilter: FilterType) => {
+    setFilter(newFilter);
+    if (newFilter === "performance") {
+      setPageNoPerformance(1);
+      setHasMorePerformance(true);
+      setPerformances([]);
+    } else if (newFilter === "festival") {
+      setPageNoFestival(1);
+      setHasMoreFestival(true);
+      setFestivals([]);
+    }
+  };
+
+  const onDateClick = (dateStr: string) => {
+    let newClickDates = [...clickDates];
+    if (newClickDates.length === 0) {
+      newClickDates = [dateStr];
+    } else if (newClickDates.length === 1) {
+      if (dateStr === newClickDates[0]) {
+        newClickDates = [dateStr];
+      } else {
+        newClickDates.push(dateStr);
+      }
+    } else {
+      newClickDates = [dateStr];
+    }
+
+    if (newClickDates.length === 2) {
+      const [first, second] = newClickDates;
+      if (new Date(first) > new Date(second)) {
+        newClickDates = [second, first];
+      }
+    }
+
+    setClickDates(newClickDates);
+
+    if (newClickDates.length === 1) {
+      setSelectedRange({ start: newClickDates[0], end: newClickDates[0] });
+    } else if (newClickDates.length === 2) {
+      setSelectedRange({ start: newClickDates[0], end: newClickDates[1] });
+    }
+  };
+
+  const getEventsForRange = (startStr: string, endStr: string) => {
+    const startDate = new Date(startStr);
+    const endDate = new Date(endStr);
 
     const perfList = performances.filter((perf) => {
-      const start = parseDotDate(perf.startDate);
-      const end = parseDotDate(perf.endDate);
-      return date >= start && date <= end;
+      const perfStart = parseDotDate(perf.startDate);
+      const perfEnd = parseDotDate(perf.endDate);
+      return perfEnd >= startDate && perfStart <= endDate;
     });
 
     const festList = festivals.filter((fest) => {
-      const start = new Date(fest.startDate);
-      const end = new Date(fest.endDate);
-      return date >= start && date <= end;
+      const festStart = new Date(fest.eventStartDate);
+      const festEnd = new Date(fest.eventEndDate);
+      return festEnd >= startDate && festStart <= endDate;
     });
 
     return { perfList, festList };
   };
 
-  const { perfList, festList } = selectedDate
-    ? getEventsForDate(selectedDate)
-    : { perfList: [], festList: [] };
+  const { perfList, festList } = getEventsForRange(selectedRange.start, selectedRange.end);
 
-  // 커스텀 헤더 버튼 핸들러
   const handlePrev = () => {
     calendarRef.current?.getApi().prev();
     setViewTitle(calendarRef.current?.getApi().view.title || "");
   };
+
   const handleNext = () => {
     calendarRef.current?.getApi().next();
     setViewTitle(calendarRef.current?.getApi().view.title || "");
   };
+
   const handleToday = () => {
     calendarRef.current?.getApi().today();
     setViewTitle(calendarRef.current?.getApi().view.title || "");
   };
+
   const handleDatesSet = () => {
     const api = calendarRef.current?.getApi();
     if (api) setViewTitle(api.view.title);
   };
 
-  // 날짜 셀에 selected-date 클래스 추가
   useEffect(() => {
     document.querySelectorAll(".fc-daygrid-day.selected-date").forEach((el) => {
       el.classList.remove("selected-date");
     });
-    if (selectedDate) {
-      const cell = document.querySelector(
-        `.fc-daygrid-day[data-date="${selectedDate}"]`
-      );
-      if (cell) cell.classList.add("selected-date");
-    }
-  }, [selectedDate, viewTitle]);
 
-  // 높이 맞추기: 달력 높이 추적
-  const [calendarHeight, setCalendarHeight] = useState<number | undefined>(
-    undefined
-  );
+    if (calendarRef.current) {
+      let cur = new Date(selectedRange.start);
+      const end = new Date(selectedRange.end);
+      while (cur <= end) {
+        const dateStr = cur.toISOString().slice(0, 10);
+        const cell = document.querySelector(`.fc-daygrid-day[data-date="${dateStr}"]`);
+        if (cell) cell.classList.add("selected-date");
+        cur.setDate(cur.getDate() + 1);
+      }
+    }
+  }, [selectedRange, viewTitle]);
+
+  const [calendarHeight, setCalendarHeight] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    // 달력 컨테이너의 실제 높이 측정
     const resize = () => {
       const el = document.getElementById("calendar-area");
       if (el) setCalendarHeight(el.offsetHeight);
@@ -138,57 +253,50 @@ const CalendarPage = () => {
 
   const { t } = useTranslation();
 
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return { error };
+  const handleLoadMore = () => {
+    if (filter === "performance" && !loadingPerformance && hasMorePerformance) {
+      setPageNoPerformance((prev) => prev + 1);
+    } else if (filter === "festival" && !loadingFestival && hasMoreFestival) {
+      setPageNoFestival((prev) => prev + 1);
+    }
+  };
+
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="bg-gradient-to-br from-blue-100 via-pink-50 to-yellow-100 py-8 px-4 flex flex-col items-center rounded-2xl mb-10 shadow-xl">
       <div className="max-w-6xl w-full bg-white rounded-2xl p-8 flex flex-col md:flex-row gap-8">
-        {/* 왼쪽: 캘린더 부분 */}
-        <div
-          id="calendar-area"
-          className="w-full md:w-1/2 flex flex-col"
-          style={{ minHeight: 0 }}
-        >
+        <div id="calendar-area" className="w-full md:w-1/2 flex flex-col" style={{ minHeight: 0 }}>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-center mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-pink-400">
             {t("calendar.title")}
           </h1>
           <p className="text-sm sm:text-md text-center text-gray-500 mb-8">
             {t("calendar.subtitle")}
           </p>
-          {/* 토글 버튼 */}
-          <CalendarFilterToggle filter={filter} setFilter={setFilter} />
-          {/* 커스텀 헤더 */}
-          <CalendarHeader
-            viewTitle={viewTitle}
-            handlePrev={handlePrev}
-            handleNext={handleNext}
-            handleToday={handleToday}
-          />
-          {/* 캘린더 */}
+
+          <CalendarFilterToggle filter={filter} setFilter={handleFilterChange} />
+          <CalendarHeader viewTitle={viewTitle} handlePrev={handlePrev} handleNext={handleNext} handleToday={handleToday} />
           <EventCalendar
             calendarRef={calendarRef}
             handleDatesSet={handleDatesSet}
-            setSelectedDate={setSelectedDate}
+            setSelectedDate={onDateClick}
+            performances={filter === "performance" ? performances : []}
+            festivals={filter === "festival" ? festivals : []}
+            filter={filter}
           />
         </div>
-        {/* 오른쪽: 일정 리스트 */}
-        {selectedDate ? (
-          <EventList
-            selectedDate={selectedDate}
-            perfList={perfList}
-            festList={festList}
-            filter={filter}
-            calendarHeight={calendarHeight}
-            formatDateRange={formatDateRange}
-          />
-        ) : (
-          <div className="w-full md:w-1/2 flex flex-col items-center justify-center text-center">
-            <p className="text-gray-500 text-md">
-              Select a date to see events.
-            </p>
-          </div>
-        )}
+
+        <EventList
+          selectedDate={selectedRange.start}
+          perfList={perfList}
+          festList={festList}
+          filter={filter}
+          calendarHeight={calendarHeight}
+          formatDateRange={formatDateRange}
+          onLoadMore={handleLoadMore}
+          hasMore={filter === "performance" ? hasMorePerformance : hasMoreFestival}
+          loading={filter === "performance" ? loadingPerformance : loadingFestival}
+        />
       </div>
     </div>
   );

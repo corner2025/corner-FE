@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 export const FILTERS = [
-  { label: "calendar.toggle.all", value: "all" },
   { label: "calendar.toggle.performance", value: "performance" },
   { label: "calendar.toggle.festival", value: "festival" },
 ] as const;
