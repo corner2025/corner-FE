@@ -20,7 +20,12 @@ const KakaoMapView: React.FC<Props> = ({
     libraries: ["services", "clusterer"],
   });
 
-  // myLocation이 없으면 로딩 UI
+  // 디버깅용 로그 출력
+  console.log("KakaoMapView - myLocation:", myLocation);
+  console.log("KakaoMapView - center:", center);
+  console.log("KakaoMapView - mapCenter:", center || myLocation);
+  console.log("KakaoMapView - shops:", shops);
+
   if (!myLocation) {
     return (
       <div className="w-full h-80 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-800 text-xl font-bold">
@@ -29,7 +34,6 @@ const KakaoMapView: React.FC<Props> = ({
     );
   }
 
-  // center가 없으면 내 위치로 fallback
   const mapCenter = center || myLocation;
 
   return (
@@ -43,18 +47,20 @@ const KakaoMapView: React.FC<Props> = ({
       level={level ?? 4}
       draggable={true}
     >
-      {/* 면세점 마커  */}
+      {/* 면세점 마커 */}
       {shops &&
-        shops.map((shop, idx) => (
-          <MapMarker
-            key={`shop-${idx}`}
-            position={{ lat: shop.lat, lng: shop.lng }}
-            image={{
-              src: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-              size: { width: 32, height: 32 },
-            }}
-          ></MapMarker>
-        ))}
+        shops.map((shop, idx) => {
+          return (
+            <MapMarker
+              key={`shop-${idx}`}
+              position={{ lat: shop.lat, lng: shop.lng }} // lat, lng 바꿔서 넣었었는데, 백에서 똑바로 보내준다네요
+              image={{
+                src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+                size: { width: 32, height: 32 },
+              }}
+            />
+          );
+        })}
 
       {/* 내 위치 마커 */}
       <MapMarker
@@ -63,7 +69,7 @@ const KakaoMapView: React.FC<Props> = ({
           src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
           size: { width: 24, height: 35 },
         }}
-      ></MapMarker>
+      />
     </Map>
   );
 };

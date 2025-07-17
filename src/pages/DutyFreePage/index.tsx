@@ -9,6 +9,7 @@ import KakaoMapView from "../../components/KakaoMapView";
 import type { DutyFreeShop } from "../../types/dutyFreeshop";
 import { FaCrosshairs } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import axiosInstance from "../../utils/axios";
 import type {
   ChartDataPoint,
   DutyFreeProduct,
@@ -44,9 +45,12 @@ const DutyFreePage: React.FC = () => {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [apiShops, setApiShops] = useState<
+    { name: string; latitude: number; longitude: number }[]
+  >([]);
+
   const { t } = useTranslation();
 
-  // 내 위치 상태
   const [myLocation, setMyLocation] = useState<{
     lat: number;
     lng: number;
@@ -60,7 +64,6 @@ const DutyFreePage: React.FC = () => {
   } | null>(null);
   const navigate = useNavigate();
 
-  // 내 위치 받아오기 및 지도 중심 초기화
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -79,32 +82,24 @@ const DutyFreePage: React.FC = () => {
     );
   }, []);
 
-  // 랭킹 데이터 및 차트 데이터 fetch
   useEffect(() => {
     setLoading(true);
     let url = "";
     let params = "";
     if (period === "month") {
-      url = `${
-        import.meta.env.VITE_SERVER_URL
-      }dutyfree/products/monthly-ranking`;
-      params = `?yearMonth=${selectedMonth}&limit=5`;
+      url = `/dutyfree/products/monthly-ranking`;
+      params = `yearMonth=${selectedMonth}&limit=5`;
     } else {
-      url = `${
-        import.meta.env.VITE_SERVER_URL
-      }dutyfree/products/annual-ranking`;
-      params = `?yearMonth=${selectedYear}&limit=5`;
+      url = `/dutyfree/products/annual-ranking`;
+      params = `yearMonth=${selectedYear}&limit=5`;
     }
-    const fullUrl = `${url}${params}`;
 
-    fetch(fullUrl)
+    axiosInstance
+      .get(`${url}?${params}`)
       .then((res) => {
-        // console.log("response status:", res.status);
-        return res.json();
-      })
-      .then((data) => {
-        // console.log("response data:", data);
+        const data = res.data;
         setRankingData(data);
+
         if (Array.isArray(data)) {
           setChartData(
             data.map((item: DutyFreeProduct) =>
@@ -128,21 +123,31 @@ const DutyFreePage: React.FC = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.error("fetch error:", err);
+        console.error("면세점 랭킹 fetch 실패:", err);
         setLoading(false);
       });
   }, [period, selectedMonth, selectedYear]);
 
-  // 월 옵션: 연도 변경 시 해당 연도만 필터
+  useEffect(() => {
+    axiosInstance
+      .get("dutyfree/locations")
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setApiShops(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error("지도용 면세점 위치 불러오기 실패:", err);
+      });
+  }, []);
+
   const filteredMonthOptions = useMemo(
     () => monthOptions.filter((m) => m.startsWith(selectedYear)),
     [selectedYear, monthOptions]
   );
 
-  // 가까운 면세점 리스트 (커스텀 훅)
   const sortedShops = useNearbyShops(myLocation, [], 3);
 
-  // 상세정보 모달에서 지도 이동
   const handleMoveMapToShop = (shop: DutyFreeShop & { distance?: number }) => {
     if (shop.latitude && shop.longitude) {
       setMapCenter({ lat: shop.latitude, lng: shop.longitude });
@@ -151,7 +156,6 @@ const DutyFreePage: React.FC = () => {
     setSelectedShop(null);
   };
 
-  // 현 위치로 지도 중심 이동 버튼 핸들러
   const handleMoveToMyLocation = () => {
     if (myLocation) {
       setMapCenter(myLocation);
@@ -164,7 +168,6 @@ const DutyFreePage: React.FC = () => {
       className="min-h-screen bg-gray-50 pb-5 mb-10 rounded-[22.375px]"
       style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
     >
-      {/* 헤더 */}
       <header className="w-full bg-white border-b border-gray-200">
         <div className="max-w-3xl mx-auto pt-7 pb-11 flex flex-col items-center">
           <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight animate-fade-in-down">
@@ -176,7 +179,6 @@ const DutyFreePage: React.FC = () => {
         </div>
       </header>
 
-      {/* 랭킹/차트 */}
       <section className="max-w-4xl mx-auto mt-10 mb-12 px-4 grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
         <DutyFreeRankingCard
           rankingData={rankingData}
@@ -193,7 +195,6 @@ const DutyFreePage: React.FC = () => {
         <DutyFreeChartCard chartData={chartData} period={period} />
       </section>
 
-      {/* 내 주변 면세점 */}
       <section className="max-w-4xl mx-auto mb-8 px-4 animate-fade-in">
         <div className="flex items-center justify-between mb-4">
           <h2 className="sm:text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -217,7 +218,6 @@ const DutyFreePage: React.FC = () => {
         />
       </section>
 
-      {/* 지도 */}
       <section className="max-w-4xl mx-auto mb-10 px-4 relative">
         <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
           <span className="text-blue-400 text-xl">🗺️</span>
@@ -241,16 +241,15 @@ const DutyFreePage: React.FC = () => {
             level={mapLevel}
             center={mapCenter}
             myLocation={myLocation}
-            shops={sortedShops.map((shop) => ({
-              lat: shop.latitude!,
-              lng: shop.longitude!,
+            shops={apiShops.map((shop) => ({
+              lat: shop.latitude,
+              lng: shop.longitude,
               name: shop.name,
             }))}
           />
         )}
       </section>
 
-      {/* 상세정보 모달 */}
       <DutyFreeShopDetailModal
         shop={selectedShop}
         onClose={() => setSelectedShop(null)}
