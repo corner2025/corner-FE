@@ -10,11 +10,6 @@ import axiosInstance from "../../utils/axios";
 import type { Festival } from "../../types/festival";
 import type { Performance } from "../../types/performance";
 
-function parseDotDate(str: string): Date {
-  const [y, m, d] = str.split(".").map(Number);
-  return new Date(y, m - 1, d);
-}
-
 function formatDateRange(start: Date, end: Date) {
   const s = start;
   const e = end;
@@ -28,6 +23,13 @@ function formatDateToHyphen(date: Date) {
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
+}
+
+function formatDateToDot(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}.${m}.${d}`;
 }
 
 const todayStr = new Date().toISOString().slice(0, 10);
@@ -66,16 +68,13 @@ const CalendarPage = () => {
     const params = {
       page: pageNoPerformance,
       size: 7,
-      startDate: formatDateToHyphen(new Date(selectedRange.start)),
-      endDate: formatDateToHyphen(new Date(selectedRange.end)),
+      startDate: formatDateToDot(new Date(selectedRange.start)),
+      endDate: formatDateToDot(new Date(selectedRange.end)),
     };
-
-    console.log("🎯 공연 요청 파라미터:", params);
 
     axiosInstance
       .get("performances", { params })
       .then((res) => {
-        console.log("✅ 공연 응답 데이터:", res.data);
         const content = res.data.content || [];
         setPerformances((prev) => {
           if (pageNoPerformance === 1) return content;
@@ -89,7 +88,7 @@ const CalendarPage = () => {
         setError("공연 데이터를 불러오지 못했습니다.");
         setLoadingPerformance(false);
       });
-  }, [pageNoPerformance, filter, selectedRange]); // ← 수정됨
+  }, [pageNoPerformance, filter, selectedRange]);
 
   useEffect(() => {
     if (filter !== "festival") return;
@@ -104,12 +103,9 @@ const CalendarPage = () => {
       endDate: formatDateToHyphen(new Date(selectedRange.end)),
     };
 
-    console.log("🎯 축제 요청 파라미터:", params);
-
     axiosInstance
       .get("festivals", { params })
       .then((res) => {
-        console.log("✅ 축제 응답 데이터:", res.data);
         const content = res.data.content || [];
         setFestivals((prev) => {
           if (pageNoFestival === 1) return content;
@@ -125,7 +121,6 @@ const CalendarPage = () => {
       });
   }, [pageNoFestival, filter, selectedRange]);
 
-  // 날짜가 바뀔 때마다 페이지 초기화
   useEffect(() => {
     if (filter === "performance") {
       setPageNoPerformance(1);
@@ -181,26 +176,8 @@ const CalendarPage = () => {
     }
   };
 
-  const getEventsForRange = (startStr: string, endStr: string) => {
-    const startDate = new Date(startStr);
-    const endDate = new Date(endStr);
-
-    const perfList = performances.filter((perf) => {
-      const perfStart = parseDotDate(perf.startDate);
-      const perfEnd = parseDotDate(perf.endDate);
-      return perfEnd >= startDate && perfStart <= endDate;
-    });
-
-    const festList = festivals.filter((fest) => {
-      const festStart = new Date(fest.eventStartDate);
-      const festEnd = new Date(fest.eventEndDate);
-      return festEnd >= startDate && festStart <= endDate;
-    });
-
-    return { perfList, festList };
-  };
-
-  const { perfList, festList } = getEventsForRange(selectedRange.start, selectedRange.end);
+  const perfList = performances;
+  const festList = festivals;
 
   const handlePrev = () => {
     calendarRef.current?.getApi().prev();
