@@ -5,10 +5,14 @@ import type { FilterType } from "./CalendarFilterToggle";
 import { FaTheaterMasks } from "react-icons/fa";
 import { GiPartyPopper } from "react-icons/gi";
 
-// 점(.)으로 구분된 날짜 문자열을 Date 객체로 변환
 function parseDotDate(str: string): Date {
   const [year, month, day] = str.split(".").map(Number);
   return new Date(year, month - 1, day);
+}
+
+function parseAnyDate(str: string): Date {
+  if (!str) return new Date("1900-01-01");
+  return str.includes(".") ? parseDotDate(str) : new Date(str);
 }
 
 interface Props {
@@ -57,33 +61,28 @@ const EventList: React.FC<Props> = ({
   const showPerf = filter === "performance";
   const showFest = filter === "festival";
 
+  const selected = new Date(selectedDate);
+
+  const filteredFestList = festList.filter((fest) => {
+    const start = parseAnyDate(fest.eventStartDate);
+    const end = parseAnyDate(fest.eventEndDate);
+
+    const result = selected >= start && selected <= end;
+
+    return result;
+  });
+
   const renderPerformances = () => {
     if (perfList.length === 0) {
       return <div className="text-gray-400">해당 날짜에는 공연이 없습니다.</div>;
     }
 
     return perfList.map((perf, idx) => {
-      if (idx === perfList.length - 1) {
-        return (
-          <li
-            key={`performance-${perf.id}`}
-            ref={lastItemRef}
-            className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 shadow flex flex-col"
-          >
-            <span className="flex items-center gap-2 font-semibold text-blue-700 text-lg">
-              <FaTheaterMasks className="text-blue-400" />
-              {perf.name}
-            </span>
-            <span className="text-sm text-gray-600 mt-1">장소 : {perf.area}</span>
-            <span className="text-xs text-gray-400">
-              {formatDateRange(parseDotDate(perf.startDate), parseDotDate(perf.endDate))}
-            </span>
-          </li>
-        );
-      }
+      const isLast = idx === perfList.length - 1;
       return (
         <li
           key={`performance-${perf.id}`}
+          ref={isLast ? lastItemRef : null}
           className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 shadow flex flex-col"
         >
           <span className="flex items-center gap-2 font-semibold text-blue-700 text-lg">
@@ -92,7 +91,8 @@ const EventList: React.FC<Props> = ({
           </span>
           <span className="text-sm text-gray-600 mt-1">장소 : {perf.area}</span>
           <span className="text-xs text-gray-400">
-            {formatDateRange(parseDotDate(perf.startDate), parseDotDate(perf.endDate))}
+            {/* 여기만 수정: 공연 날짜는 하이픈 형태로 와서 Date로 변환 */}
+            {formatDateRange(new Date(perf.startDate), new Date(perf.endDate))}
           </span>
         </li>
       );
@@ -100,33 +100,16 @@ const EventList: React.FC<Props> = ({
   };
 
   const renderFestivals = () => {
-    if (festList.length === 0) {
+    if (filteredFestList.length === 0) {
       return <div className="text-gray-400">해당 날짜에는 축제가 없습니다.</div>;
     }
 
-    return festList.map((fest, idx) => {
-      if (idx === festList.length - 1) {
-        return (
-          <li
-            key={`festival-${fest.id}`}
-            ref={lastItemRef}
-            className="rounded-lg border border-pink-200 bg-pink-50 px-4 py-3 shadow flex flex-col"
-          >
-            <span className="flex items-center gap-2 font-semibold text-pink-700 text-lg">
-              <GiPartyPopper className="text-pink-400" />
-              {fest.title}
-            </span>
-            <span className="text-sm text-gray-600 mt-1">장소: {fest.addr1}</span>
-            <span className="text-xs text-gray-400">
-              {formatDateRange(new Date(fest.eventStartDate), new Date(fest.eventEndDate))}
-            </span>
-            {fest.tel && <span className="text-sm mt-2">{fest.tel}</span>}
-          </li>
-        );
-      }
+    return filteredFestList.map((fest, idx) => {
+      const isLast = idx === filteredFestList.length - 1;
       return (
         <li
           key={`festival-${fest.id}`}
+          ref={isLast ? lastItemRef : null}
           className="rounded-lg border border-pink-200 bg-pink-50 px-4 py-3 shadow flex flex-col"
         >
           <span className="flex items-center gap-2 font-semibold text-pink-700 text-lg">
@@ -135,7 +118,7 @@ const EventList: React.FC<Props> = ({
           </span>
           <span className="text-sm text-gray-600 mt-1">장소: {fest.addr1}</span>
           <span className="text-xs text-gray-400">
-            {formatDateRange(new Date(fest.eventStartDate), new Date(fest.eventEndDate))}
+            {formatDateRange(parseAnyDate(fest.eventStartDate), parseAnyDate(fest.eventEndDate))}
           </span>
           {fest.tel && <span className="text-sm mt-2">{fest.tel}</span>}
         </li>
@@ -162,7 +145,7 @@ const EventList: React.FC<Props> = ({
       <div className="flex-1 min-h-0 overflow-y-auto pr-2 space-y-4">
         <ul style={{ maxHeight: "100%", minHeight: 0 }}>
           {selectedDate &&
-            !((showPerf && perfList.length) || (showFest && festList.length)) && (
+            !((showPerf && perfList.length) || (showFest && filteredFestList.length)) && (
               <div className="text-gray-400">해당 날짜에는 공연이나 축제가 없습니다.</div>
             )}
 
