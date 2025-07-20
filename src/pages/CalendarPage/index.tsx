@@ -25,13 +25,6 @@ function formatDateToHyphen(date: Date) {
   return `${y}-${m}-${d}`;
 }
 
-function formatDateToDot(date: Date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return `${y}.${m}.${d}`;
-}
-
 const todayStr = new Date().toISOString().slice(0, 10);
 
 const CalendarPage = () => {
@@ -68,8 +61,8 @@ const CalendarPage = () => {
     const params = {
       page: pageNoPerformance,
       size: 7,
-      startDate: formatDateToDot(new Date(selectedRange.start)),
-      endDate: formatDateToDot(new Date(selectedRange.end)),
+      startDate: formatDateToHyphen(new Date(selectedRange.start)),
+      endDate: formatDateToHyphen(new Date(selectedRange.end)),
     };
 
     axiosInstance
@@ -106,13 +99,13 @@ const CalendarPage = () => {
     axiosInstance
       .get("festivals", { params })
       .then((res) => {
-        const content = res.data.content || [];
+        const content = Array.isArray(res.data) ? res.data : [];
         setFestivals((prev) => {
           if (pageNoFestival === 1) return content;
           const newItems = content.filter((item: Festival) => !prev.some((f) => f.id === item.id));
           return [...prev, ...newItems];
         });
-        setHasMoreFestival(!res.data.last);
+        setHasMoreFestival(content.length === 7);
         setLoadingFestival(false);
       })
       .catch(() => {
